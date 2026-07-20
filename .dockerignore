@@ -1,0 +1,30 @@
+# Keep Docker build context lean — exclude VCS, deps, build artifacts, and IDE files.
+
+.git
+.nx
+.cursor
+.claude
+.agents
+.github
+node_modules
+dist
+coverage
+reports
+__pycache__
+.pytest_cache
+.ruff_cache
+.venv
+.env
+.env.*
+!.env.example
+
+# Storybook build output (causes Nx duplicate-project errors inside the container)
+**/storybook-static
+**/test-results
+
+# OS / editor
+.DS_Store
+*.swp
+*.swo
+
+.tmp/

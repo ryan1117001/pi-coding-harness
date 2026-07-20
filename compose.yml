@@ -1,0 +1,71 @@
+name: workspace
+
+services:
+  # Custom PostgreSQL 18 image (pgvector + Apache AGE) built from projects/postgres.
+  # The api connects to this over the network using async SQLAlchemy + psycopg3.
+  postgres:
+    build:
+      context: ./projects/postgres
+      dockerfile: Dockerfile
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-workspace}
+      POSTGRES_EXTRA_DATABASES: ${POSTGRES_EXTRA_DATABASES:-}
+    ports:
+      - '5432:5432'
+    volumes:
+      # PG18 images store data in a major-version subdirectory under PGDATA
+      # (/var/lib/postgresql/18/docker). Mount the parent so the volume holds it,
+      # rather than the pre-18 /var/lib/postgresql/data path (now flagged unused).
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-workspace}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # FastAPI service. Connects to the postgres service over the Compose network
+  # via async SQLAlchemy + psycopg3.
+  api:
+    build:
+      context: ./projects/api
+      dockerfile: Dockerfile
+      target: runtime
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-password}@postgres:5432/${POSTGRES_DB:-workspace}
+    ports:
+      - '8000:8000'
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+
+  # Vite/React dev server with hot reload. Run `docker compose watch` to sync
+  # source changes into the container; `docker compose up` just starts it.
+  web:
+    build:
+      context: .
+      dockerfile: projects/web/Dockerfile
+      target: dev
+    ports:
+      - '4200:4200'
+    develop:
+      watch:
+        # Live-sync source — Vite HMR picks the changes up in place.
+        - action: sync
+          path: ./projects/web/src
+          target: /workspace/projects/web/src
+        - action: sync
+          path: ./projects/web/index.html
+          target: /workspace/projects/web/index.html
+        # Dependency or config changes require a fresh image.
+        - action: rebuild
+          path: ./projects/web/package.json
+        - action: rebuild
+          path: ./projects/web/vite.config.mts
+        - action: rebuild
+          path: ./pnpm-lock.yaml
+
+volumes:
+  postgres-data:

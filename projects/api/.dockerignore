@@ -1,0 +1,11 @@
+# Keep the api build context lean and avoid copying host-only artifacts
+# (a host .venv would shadow the one built inside the image).
+.venv
+dist
+__pycache__
+*.pyc
+.pytest_cache
+.ruff_cache
+.coverage
+coverage
+reports

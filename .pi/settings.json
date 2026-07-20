@@ -1,0 +1,26 @@
+{
+  "packages": [
+    "npm:pi-web-access@0.13.0",
+    "npm:pi-readseek@0.8.0",
+    "npm:pi-lens@3.8.71",
+    {
+      "source": "npm:pi-subagents@0.35.1",
+      "skills": [],
+      "prompts": []
+    },
+    "npm:pi-mcp-adapter@2.11.0",
+    "npm:@plannotator/pi-extension@0.24.1"
+  ],
+  "readseek": {
+    "replacedTools": ["read", "edit", "write", "grep"],
+    "syntaxValidation": "block"
+  },
+  "subagents": {
+    "agentOverrides": {
+      "reviewer": {
+        "inheritSkills": true,
+        "skills": ["codebase-analysis"]
+      }
+    }
+  }
+}

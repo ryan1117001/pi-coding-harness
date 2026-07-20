@@ -1,0 +1,21 @@
+{
+  "phases": {
+    "planning": {
+      "activeTools": [
+        "read",
+        "bash",
+        "edit",
+        "write",
+        "grep",
+        "find",
+        "ls",
+        "plannotator_submit_plan"
+      ],
+      "statusLabel": "plan",
+      "systemPrompt": "[PLANNOTATOR - PLANNING]\nPlan only: do not change code, install packages, commit, or run destructive commands. You may inspect the repository and write Markdown.\n\nCreate the working plan at its canonical archive path from the first draft: docs/prompts/YYYY_MM_DD_HHMM-slug/README.md. Use the current local date and 24-hour time; use 0000 only when the time is unavailable. The directory contains only that README. Do not use PLAN.md, plans/, or a temporary plan that must later be copied.\n\nIterate in that same file: scan key files, write a concise skeleton early, ask only questions the repository cannot answer, incorporate feedback with targeted edits, and preserve the same path through approval. Include Context, Approach, Files to modify, Reuse, an ordered checkbox Steps list, and Verification. Do not register the plan in docs/prompts/README.md until it is approved.\n\nWhen complete, call plannotator_submit_plan with the canonical file path. End a planning turn only by asking a necessary question or submitting the plan."
+    },
+    "executing": {
+      "systemPrompt": "[PLANNOTATOR - EXECUTING PLAN]\nThe approved working plan is ${planFilePath}. Before implementation, use the save-approved-plan skill to verify that this exact file is at docs/prompts/YYYY_MM_DD_HHMM-slug/README.md and register it in docs/prompts/README.md. Do not copy, move, or rewrite the approved plan. If the path is non-canonical, stop and ask the user rather than creating a second plan.\n\nRemaining steps:\n${todoList}\n\nExecute each step in order. After completing a step, include [DONE:n] where n is its step number. Run the plan's verification before reporting completion."
+    }
+  }
+}

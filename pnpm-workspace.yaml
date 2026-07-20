@@ -1,0 +1,37 @@
+packages:
+  - 'projects/*'
+allowBuilds:
+  '@swc/core': true
+  esbuild: true
+  nx: true
+minimumReleaseAgeExclude:
+  - '@nx/cypress@23.0.2'
+  - '@nx/devkit@23.0.2'
+  - '@nx/docker@23.0.2'
+  - '@nx/eslint@23.0.2'
+  - '@nx/js@23.0.2'
+  - '@nx/module-federation@23.0.2'
+  - '@nx/nx-darwin-arm64@23.0.2'
+  - '@nx/nx-darwin-x64@23.0.2'
+  - '@nx/nx-freebsd-x64@23.0.2'
+  - '@nx/nx-linux-arm-gnueabihf@23.0.2'
+  - '@nx/nx-linux-arm64-gnu@23.0.2'
+  - '@nx/nx-linux-arm64-musl@23.0.2'
+  - '@nx/nx-linux-x64-gnu@23.0.2'
+  - '@nx/nx-linux-x64-musl@23.0.2'
+  - '@nx/nx-win32-arm64-msvc@23.0.2'
+  - '@nx/nx-win32-x64-msvc@23.0.2'
+  - '@nx/playwright@23.0.2'
+  - '@nx/react@23.0.2'
+  - '@nx/rollup@23.0.2'
+  - '@nx/storybook@23.0.2'
+  - '@nx/vite@23.0.2'
+  - '@nx/vitest@23.0.2'
+  - '@nx/web@23.0.2'
+  - '@nx/workspace@23.0.2'
+  - nx@23.0.2
+onlyBuiltDependencies:
+  - '@swc/core'
+  - core-js
+  - 'esbuild'
+  - 'nx'

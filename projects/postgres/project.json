@@ -1,0 +1,12 @@
+{
+  "name": "postgres",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "projects/postgres",
+  "metadata": {
+    "dockerfile": "projects/postgres/Dockerfile",
+    "dockerImageName": "postgres",
+    "dockerContext": "projects/postgres"
+  },
+  "tags": ["component:infra", "epic:devops"]
+}
