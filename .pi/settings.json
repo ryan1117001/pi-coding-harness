@@ -9,17 +9,33 @@
       "prompts": []
     },
     "npm:pi-mcp-adapter@2.11.0",
-    "npm:@plannotator/pi-extension@0.24.1"
+    "npm:@plannotator/pi-extension@0.24.1",
+    "npm:@gotgenes/pi-permission-system",
+    "npm:pi-intercom"
   ],
   "readseek": {
-    "replacedTools": ["read", "edit", "write", "grep"],
-    "syntaxValidation": "block"
+    "replacedTools": [],
+    "imageMode": "auto",
+    "syntaxValidation": "warn",
+    "timeoutMs": 120000,
+    "grep": {
+      "maxLines": 2000,
+      "maxBytes": 51200
+    }
   },
   "subagents": {
     "agentOverrides": {
-      "reviewer": {
-        "inheritSkills": true,
-        "skills": ["codebase-analysis"]
+      "researcher": {
+        "model": "openai/gpt-5.6-terra",
+        "fallbackModels": [
+          "openai/gpt-5.6-luna"
+        ]
+      },
+      "technical-writer": {
+        "model": "openai/gpt-5.6-terra",
+        "fallbackModels": [
+          "openai/gpt-5.6-luna"
+        ]
       }
     }
   }
