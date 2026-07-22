@@ -3,21 +3,22 @@
     "npm:pi-web-access@0.13.0",
     "npm:pi-readseek@0.8.0",
     "npm:pi-lens@3.8.71",
-    {
-      "source": "npm:pi-subagents@0.35.1",
-      "skills": [],
-      "prompts": []
-    },
+    "npm:pi-subagents@0.35.1",
     "npm:pi-mcp-adapter@2.11.0",
-    "npm:@plannotator/pi-extension@0.24.1",
-    "npm:@gotgenes/pi-permission-system",
-    "npm:pi-intercom"
+    "npm:@plannotator/pi-extension@0.24.2",
+    "npm:pi-intercom@0.6.0",
+    "npm:@gotgenes/pi-permission-system@20.10.0"
   ],
   "readseek": {
-    "replacedTools": [],
+    "replacedTools": [
+      "read",
+      "edit",
+      "write",
+      "grep"
+    ],
     "imageMode": "auto",
     "syntaxValidation": "warn",
-    "timeoutMs": 120000,
+    "timeoutMs": 240000,
     "grep": {
       "maxLines": 2000,
       "maxBytes": 51200
