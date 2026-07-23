@@ -2,7 +2,7 @@
 
 **workspace** is an Nx monorepo with a reproducible Pi coding-agent harness. It includes Nx, pnpm, Biome, Vitest, Playwright, Storybook, `@nxlv/python` with uv, project instructions, Agent Skills, delegated agents, planning, diagnostics, web access, and lazy MCP integration.
 
-Read [`AGENTS.md`](AGENTS.md) for workspace policy, [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the repository map, and [`docs/pi-harness/`](docs/pi-harness/) for Pi setup and extension provenance.
+Read [`AGENTS.md`](./AGENTS.md) for workspace policy, [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the repository map, and [`docs/pi-harness/`](docs/pi-harness/) for Pi setup and extension provenance.
 
 ## Use this template
 
@@ -16,11 +16,13 @@ Read [`AGENTS.md`](AGENTS.md) for workspace policy, [`docs/ARCHITECTURE.md`](doc
 
 ```bash
 pnpm install
-pnpm exec playwright install
+pnpm exec playwright install chromium  # web unit and Storybook browser tests
 pnpm exec nx run-many -t lint test
 pnpm exec nx graph
 pi
 ```
+
+Run `pnpm exec playwright install` instead when executing the cross-browser [`web-e2e`](projects/web-e2e/README.md) suite. To start the local service stack, optionally copy `.env.example` to `.env`, then run `docker compose up --build`; see [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 Scaffold projects with Nx generators, never by hand-writing `project.json`. See [`docs/references/nx-guidelines.md`](docs/references/nx-guidelines.md) and use the `nx-generate` skill.
 
@@ -35,11 +37,15 @@ Scaffold projects with Nx generators, never by hand-writing `project.json`. See 
 | [`docs/`](docs/) | Architecture, design decisions, standards, references, approved plans, and Pi harness documentation. |
 | [`.pi/`](.pi/) | Tracked Pi settings, planning profile, project agents, and prompt templates; runtime packages are ignored. |
 | [`.agents/skills/`](.agents/skills/) | Project and vendored Agent Skills, with upstream provenance in [`skills-lock.json`](skills-lock.json). |
-| [`AGENTS.md`](AGENTS.md) | Workspace policy loaded by Pi; each project has a narrower `AGENTS.md`. |
+| [`AGENTS.md`](./AGENTS.md) | Workspace policy loaded by Pi; each project has a narrower `AGENTS.md`. |
 | [`tools/`](tools/) | Workspace-level scripts. |
 
 ## Documentation
 
-- [`CONTRIBUTING.md`](CONTRIBUTING.md) — setup, workflow, checks, and project scaffolding.
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — projects, tooling, and service topology.
-- [`docs/pi-harness/`](docs/pi-harness/) — Pi trust, packages, skills, agents, and workflows.
+| Need | Read |
+| --- | --- |
+| Set up, contribute, and run checks | [`CONTRIBUTING.md`](CONTRIBUTING.md) |
+| Understand projects, containers, and service connections | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) |
+| Find references, plans, decisions, and standards | [`docs/`](docs/) |
+| Configure Pi, skills, agents, and workflows | [`docs/pi-harness/`](docs/pi-harness/) |
+| Follow mandatory agent policy | [`AGENTS.md`](./AGENTS.md) |

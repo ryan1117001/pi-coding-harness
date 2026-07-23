@@ -1,33 +1,37 @@
 # Pi extensions
 
-Pi packages execute code with the user's permissions. The versions below were reviewed for this harness and are pinned in [`.pi/settings.json`](../../.pi/settings.json). Upgrade one package at a time and re-run the harness smoke checks.
+Pi packages execute with the user's permissions. The exact pins below are the `packages` entries in [`.pi/settings.json`](../../.pi/settings.json); upgrade one package at a time and run the relevant harness checks.
 
-## Retained packages
+## Package inventory
 
-| Package | Version | License | Purpose and rationale |
-| --- | --- | --- | --- |
-| [`pi-web-access`](https://github.com/nicobailon/pi-web-access) | 0.13.0 | MIT | Web search, source extraction, GitHub inspection, and video/PDF retrieval. Supplies external research used by the researcher agent. |
-| [`pi-readseek`](https://github.com/jarkkojs/readseek) | 0.8.0 | Apache-2.0; native dependency also LGPL-2.1-or-later | Anchored reads/edits, structural search, symbol navigation, and syntax validation. It replaces Pi's `read`, `edit`, `write`, and `grep` names to avoid duplicate file-tool surfaces. Syntax regressions block writes. |
-| [`pi-lens`](https://github.com/apmantza/pi-lens) | 3.8.71 | MIT | Deferred formatting, LSP diagnostics, read guards, structural checks, and project analysis. Replaces custom formatting and end-of-turn diagnostic hooks. |
-| [`pi-subagents`](https://github.com/nicobailon/pi-subagents) | 0.35.1 | MIT | Builtin scout, researcher, planner, worker, reviewer, oracle, context-builder, and delegate roles plus worktree-safe delegation. Optional packaged prompts and its explanatory skill are filtered because the registered tool and natural-language workflows already cover them. |
-| [`pi-mcp-adapter`](https://github.com/nicobailon/pi-mcp-adapter) | 2.11.0 | MIT | Lazy MCP discovery through one proxy tool. It reads the standard [`.mcp.json`](../../.mcp.json), so no Pi-specific duplicate server definition is needed. |
-| [`@plannotator/pi-extension`](https://github.com/backnotprop/plannotator) | 0.24.1 | MIT OR Apache-2.0 | File-based plan mode, browser approval, progress tracking, Markdown annotation, and visual code review. Project configuration writes plans directly to `docs/prompts/`. |
+| Package | Version | Primary surface |
+| --- | --- | --- |
+| [`pi-web-access`](https://github.com/nicobailon/pi-web-access) | 0.13.0 | Web search, source extraction, GitHub inspection, and video/PDF retrieval. |
+| [`pi-readseek`](https://github.com/jarkkojs/readseek) | 0.8.0 | Anchored file reads and edits, structural navigation, and syntax validation. |
+| [`pi-lens`](https://github.com/apmantza/pi-lens) | 3.8.71 | LSP diagnostics, read guards, structural checks, and project analysis. |
+| [`pi-subagents`](https://github.com/nicobailon/pi-subagents) | 0.35.1 | Builtin delegation roles, orchestration, and worktree support. |
+| [`pi-mcp-adapter`](https://github.com/nicobailon/pi-mcp-adapter) | 2.11.0 | Lazy MCP discovery through the shared [`.mcp.json`](../../.mcp.json). |
+| [`@plannotator/pi-extension`](https://github.com/backnotprop/plannotator) | 0.24.2 | File-based planning, browser approval, progress tracking, and review. |
+| [`pi-intercom`](https://github.com/nicobailon/pi-intercom) | 0.6.0 | Direct messages between related Pi sessions on the same machine. |
+| [`@gotgenes/pi-permission-system`](https://github.com/gotgenes/pi-packages) | 20.10.0 | Permission gates for tools, commands, MCP, skills, and file paths. |
 
-`pi-prompt-template-model` is not installed: Pi core loads project prompts and `pi-subagents` has a native prompt-workflow adapter. `pi-manage-todo-list` is not installed: its own documentation recommends a successor, while Plannotator already tracks approved-plan execution.
+Package-level licensing, bundled tools, and optional resources can change across releases. Review the package source and loaded runtime surface during an upgrade rather than treating this summary as a complete security inventory.
 
-## Project settings
+## Project configuration
 
-- Package versions use `npm:<name>@<exact-version>` so clean-checkout installation is deterministic.
-- The reviewer override loads `codebase-analysis` and inherits the skill catalog, preserving evidence-backed review without a duplicate reviewer agent.
-- The project-local `technical-writer` agent covers substantial documentation work, a contract absent from the builtin roster.
-- `.mcp.json` keeps DaisyUI documentation in lazy proxy mode. Search or describe the MCP surface before connecting.
+- ReadSeek replaces the standard `read`, `edit`, `write`, and `grep` tool names. Its configured syntax-validation mode is `warn`, not write blocking.
+- The project configures subagent model profiles, but model identifiers and fallbacks remain authoritative only in [`settings.json`](../../.pi/settings.json).
+- The project declares one DaisyUI MCP server in [`.mcp.json`](../../.mcp.json) with `directTools: true`. Cached server tools register directly; a first run without cached metadata falls back to the MCP proxy while the cache populates.
+- The permission-system package is installed, but a repository-level permission policy is not declared. User-level policy can affect the runtime decision.
+
+See [configuration.md](configuration.md) for consumers and operational contracts, [delegation.md](delegation.md) for agent workflow, and [skills.md](skills.md) for skill provenance.
 
 ## Upgrade procedure
 
 1. Read the package changelog, source, license, install scripts, and compatibility notes.
 2. Install the candidate version in a disposable checkout.
-3. Verify loaded tools/resources and check for new bundled prompts, skills, or commands.
-4. Run planning, subagent, MCP, file-tool, formatting, and diagnostics smoke checks.
-5. Update the exact pin and this table in the same change.
+3. Verify loaded tools, resources, prompts, skills, and effective permission behavior.
+4. Run planning, subagent, MCP, file-tool, and diagnostics smoke checks relevant to the upgrade.
+5. Update the exact pin and this inventory in the same change.
 
-Do not run `pi update --extensions` expecting pins to move; pinned npm packages are intentionally skipped.
+Do not run `pi update --extensions` expecting pinned versions to move; pinned npm packages are intentionally skipped.

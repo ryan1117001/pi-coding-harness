@@ -20,10 +20,14 @@
 - Keep browser code behind its own backend boundary. Record every new network dependency or service connection in `docs/ARCHITECTURE.md`; write a design document first when the connection changes architecture.
 - Keep edits narrow. Do not add dependencies, infrastructure, or speculative abstractions without an approved requirement.
 
-## Planning and review
+## Agent workflow
 
-- Use Plannotator for non-trivial plans. Start the working plan directly at `docs/prompts/YYYY_MM_DD_HHMM-slug/README.md`; after approval, use `save-approved-plan` to validate and register that same file before implementation. Never copy or rewrite the approved plan.
-- Use the builtin reviewer for code review; its project override loads the `codebase-analysis` skill. Use the project `technical-writer` for substantial documentation work.
+1. Read this file, the nearest project `AGENTS.md`, [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), and [`docs/standards/documentation.md`](docs/standards/documentation.md) before editing.
+2. Use Plannotator for non-trivial plans. Start the working plan directly at `docs/prompts/YYYY_MM_DD_HHMM-slug/README.md`; after approval, use `save-approved-plan` to validate and register that same file. Never copy or rewrite an approved plan.
+3. For behavior changes, use RED, GREEN, REFACTOR and confirm the failing test fails for the intended reason. Documentation-, configuration-, formatting-, generated-code, and sandbox-prototype changes are exceptions; state the exception.
+4. Choose work directly only for local, clear, low-risk work. Otherwise follow the [delegation workflow](docs/pi-harness/delegation.md): scout and plan normal work; add oracle review for risky or ambiguous decisions; use parallel read-only discovery for broad separable work.
+5. The parent session owns decisions and synthesis. Keep one writer in a shared checkout; use fresh, read-only reviewers for independent feedback. Use `worktree: true` only for intentional parallel writing from a clean tree.
+6. Assess documentation impact for every behavior, API, configuration, architecture, or workflow change. Use the project `technical-writer` when the resulting documentation work is substantial, cross-file, or user-facing; otherwise update the relevant documentation directly. Follow [`docs/pi-harness/workflows.md`](docs/pi-harness/workflows.md) for planning, review, MCP, and completion detail.
 
 ## Nx workflow
 
@@ -36,7 +40,8 @@
 Before reporting completion:
 
 1. Run the narrowest relevant project tests during development.
-2. Run `pnpm exec nx affected -t lint test --base=origin/main --parallel=3`.
-3. Run Lens diagnostics for edited source files and resolve new blockers.
-4. Recheck that documentation and `docs/ARCHITECTURE.md` describe the resulting behavior.
-5. Report commands run, outcomes, and any residual risk.
+2. Run the builtin reviewer for code changes and resolve accepted blocking findings.
+3. Run `pnpm exec nx affected -t lint test --base=origin/main --parallel=3`.
+4. Run Lens diagnostics for edited source files and resolve new blockers.
+5. Recheck that documentation and `docs/ARCHITECTURE.md` describe the resulting behavior, validate changed links, and involve `technical-writer` when the documentation impact is substantial, cross-file, or user-facing.
+6. Report commands run, outcomes, and any residual risk.

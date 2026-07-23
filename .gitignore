@@ -232,3 +232,6 @@ storage/
 .DS_Store
 docs/.DS_Store
 .nx/migrate-runs
+
+.gitnexus
+.gitnexusrc

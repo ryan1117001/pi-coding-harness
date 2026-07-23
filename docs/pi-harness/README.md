@@ -20,7 +20,7 @@ Pi installs missing project packages under ignored `.pi/npm/`. A clean checkout 
 | --- | --- | --- |
 | Workspace policy | [`AGENTS.md`](../../AGENTS.md) | Cross-workspace change and completion rules |
 | Project policy | `projects/*/AGENTS.md` | Stack, boundaries, commands, and tests |
-| Packages | [`.pi/settings.json`](../../.pi/settings.json) | Exact package versions, resource filters, overrides |
+| Packages and runtime profiles | [`.pi/settings.json`](../../.pi/settings.json) | Exact package pins, file-tool behavior, and subagent profiles |
 | Planning | [`.pi/plannotator.json`](../../.pi/plannotator.json) | Canonical plan path and approval handoff |
 | Project agents | [`.pi/agents/`](../../.pi/agents/) | Roles not covered by package builtins |
 | Prompt templates | [`.pi/prompts/`](../../.pi/prompts/) | Unique repeatable repository checks |
@@ -29,8 +29,11 @@ Pi installs missing project packages under ignored `.pi/npm/`. A clean checkout 
 
 ## Documentation
 
-- [extensions.md](extensions.md) — pinned third-party packages and why each remains.
-- [skills.md](skills.md) — retained skill catalog and provenance rules.
-- [workflows.md](workflows.md) — planning, delegation, review, and verification.
+| Need | Read |
+| --- | --- |
+| Package purpose and upgrade checks | [extensions.md](extensions.md) |
+| Configuration consumers and runtime boundaries | [configuration.md](configuration.md) |
+| Retained skill catalog and provenance | [skills.md](skills.md) |
+| Planning, delegation, review, and verification | [workflows.md](workflows.md) and [delegation.md](delegation.md) |
 
 Secrets and user preferences stay in user-level Pi configuration or environment variables. Project files contain no provider keys, model credentials, or trust decisions.
