@@ -1,0 +1,6 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "welcome_title": "Welcome to web",
+  "stack_description": "React 19 · Vite 8 · Tailwind v4 · daisyUI v5 · TanStack Router · TanStack Query",
+  "get_started": "Get started"
+}

@@ -5,6 +5,7 @@ Router, server state via TanStack Query, styling with Tailwind CSS v4 + daisyUI 
 and testing with Vitest 4 + Storybook. Components follow atomic design.
 
 See [`AGENTS.md`](AGENTS.md) for component boundaries, styling, tests, generated files, and commands.
+Translations use Paraglide JS with English message files under [`messages/`](messages/). The Vite plugin generates `src/paraglide/` during development and builds.
 
 ## Quick start
 
@@ -27,3 +28,5 @@ The active theme is `workspace-light`, a custom daisyUI theme (light-only).
 
 Story and browser tests need Playwright's Chromium: `pnpm exec playwright install chromium`.
 End-to-end tests live in [`../web-e2e/`](../web-e2e/).
+
+Paraglide message files use the Inlang message format. Run `pnpm exec paraglide-js compile --project projects/web/project.inlang --outdir projects/web/src/paraglide --emit-ts-declarations` when editor types need to be regenerated outside Vite.

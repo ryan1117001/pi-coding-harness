@@ -8,7 +8,7 @@ Nx monorepo managed with pnpm. Projects live under `projects/` and are scaffolde
 
 | Project | Type | Stack | Notes |
 | --------- | ------ | ------- | ------- |
-| [`web`](../projects/web/) | React SPA | React 19, Vite 8, Tailwind v4, daisyUI v5, TanStack Router, TanStack Query | See [`projects/web/AGENTS.md`](../projects/web/AGENTS.md). |
+| [`web`](../projects/web/) | React SPA | React 19, Vite 8, Tailwind v4, daisyUI v5, TanStack Router, TanStack Query, Paraglide JS | English messages compile from `projects/web/messages/`. See [`projects/web/AGENTS.md`](../projects/web/AGENTS.md). |
 | [`web-e2e`](../projects/web-e2e/) | Playwright e2e | Playwright | See [`projects/web-e2e/AGENTS.md`](../projects/web-e2e/AGENTS.md). |
 | [`api`](../projects/api/) | FastAPI service | Python 3.14, uv, FastAPI, uvicorn, pytest, Ruff, async SQLAlchemy, psycopg3 | See [`projects/api/AGENTS.md`](../projects/api/AGENTS.md). |
 | [`postgres`](../projects/postgres/) | Infrastructure image | PostgreSQL 18, pgvector, Apache AGE | See [`projects/postgres/AGENTS.md`](../projects/postgres/AGENTS.md). |

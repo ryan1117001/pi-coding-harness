@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { paraglideVitePlugin } from '@inlang/paraglide-js';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
@@ -18,6 +19,24 @@ export default defineConfig(() => ({
     host: 'localhost',
   },
   plugins: [
+    paraglideVitePlugin({
+      project: './project.inlang',
+      outdir: './src/paraglide',
+      emitTsDeclarations: true,
+      outputStructure: 'message-modules',
+      cookieName: 'PARAGLIDE_LOCALE',
+      strategy: ['cookie', 'url', 'preferredLanguage', 'baseLocale'],
+      urlPatterns: [
+        {
+          pattern: '/',
+          localized: [['en', '/']],
+        },
+        {
+          pattern: '/:path(.*)?',
+          localized: [['en', '/:path(.*)?']],
+        },
+      ],
+    }),
     tanstackRouter({
       target: 'react',
       autoCodeSplitting: true,
@@ -47,6 +66,7 @@ export default defineConfig(() => ({
       exclude: [
         'src/main.tsx',
         'src/routeTree.gen.ts',
+        'src/paraglide/**',
         '**/*.stories.tsx',
         '**/*.{test,spec}.{ts,tsx}',
       ],
