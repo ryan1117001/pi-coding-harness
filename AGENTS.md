@@ -23,7 +23,7 @@
 ## Agent workflow
 
 1. Read this file, the nearest project `AGENTS.md`, [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), and [`docs/standards/documentation.md`](docs/standards/documentation.md) before editing.
-2. Use Plannotator for non-trivial plans. Start the working plan directly at `docs/prompts/YYYY_MM_DD_HHMM-slug/README.md`; after approval, use `save-approved-plan` to validate and register that same file. Never copy or rewrite an approved plan.
+2. Use Plannotator for non-trivial plans. Start the working plan directly at `docs/prompts/YYYY_MM_DD_HHMM-slug/README.md`; after approval, use `save-approved-plan` to validate and register that same file. Never copy or move an approved plan; check off its implementation steps in that same file as they are completed.
 3. For behavior changes, use RED, GREEN, REFACTOR and confirm the failing test fails for the intended reason. Documentation-, configuration-, formatting-, generated-code, and sandbox-prototype changes are exceptions; state the exception.
 4. Choose work directly only for local, clear, low-risk work. Otherwise follow the [delegation workflow](docs/pi-harness/delegation.md): scout and plan normal work; add oracle review for risky or ambiguous decisions; use parallel read-only discovery for broad separable work.
 5. The parent session owns decisions and synthesis. Keep one writer in a shared checkout; use fresh, read-only reviewers for independent feedback. Use `worktree: true` only for intentional parallel writing from a clean tree.

@@ -6,7 +6,7 @@ Approved implementation plans. Plannotator creates each working plan directly at
 docs/prompts/YYYY_MM_DD_HHMM-brief-description/README.md
 ```
 
-The dated directory contains only that README. After approval, the `save-approved-plan` skill validates the path and registers it below before implementation. It never copies, moves, rewrites, or splits the plan. Execution state changes only in this index; the approved plan remains verbatim.
+The dated directory contains only that README. After approval, the `save-approved-plan` skill validates the path and registers it below before implementation. It never copies, moves, or splits the plan. As implementation steps complete, change their checkboxes from `- [ ]` to `- [x]` in the same plan; do not alter approved prose, scope, or step order. Update the index status separately.
 
 ## Status legend
 

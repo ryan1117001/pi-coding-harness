@@ -1,6 +1,6 @@
 ---
 name: save-approved-plan
-description: Validate and register the canonical plan file immediately after Plannotator approval. Use before implementation; never copy, move, or rewrite the approved plan.
+description: Validate and register the canonical plan file immediately after Plannotator approval. Use before implementation; never copy or move the approved plan, and track execution by checking off completed steps.
 ---
 
 # Register an approved Plannotator plan
@@ -19,7 +19,7 @@ docs/prompts/
 - `YYYY_MM_DD_HHMM` is the local authoring date and 24-hour time; use `0000` only when the time was unavailable when planning began.
 - The slug is short, descriptive kebab-case.
 - The dated directory contains only the approved `README.md`.
-- The file content remains the exact text approved in Plannotator.
+- Approved prose, scope, and step order remain unchanged; completed implementation-step checkboxes are the only permitted post-approval plan edits.
 
 ## Workflow
 
@@ -33,12 +33,12 @@ docs/prompts/
    ```
 
 5. Begin implementation only after the index link resolves.
-6. Update only the index status as work proceeds: `🟡 in progress`, `🟢 partial`, or `✅ completed`. Do not edit the approved plan to record execution state.
+6. As each implementation step is completed, change that exact checklist item in the registered plan from `- [ ]` to `- [x]`, then update the index status: `🟡 in progress`, `🟢 partial`, or `✅ completed`. Do not alter approved prose, scope, step order, or unchecked steps.
 
 ## Prohibited
 
 - Copying an approved plan from `PLAN.md`, `plans/`, a session message, or another temporary path.
-- Rewriting, reformatting, summarizing, or splitting the approved plan.
+- Rewriting, reformatting, summarizing, splitting, or changing approved prose, scope, or step order.
 - Registering an unapproved draft.
 - Starting implementation before registration.
-- Adding execution notes or changing checkboxes in the archived plan after approval.
+- Adding execution notes or changing a checkbox before its corresponding implementation step is complete.
