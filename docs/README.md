@@ -7,7 +7,7 @@ Architecture, conventions, agent-harness documentation, and reference material f
 | New contributor | [`../README.md`](../README.md) | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) and [`ARCHITECTURE.md`](ARCHITECTURE.md) |
 | Coding agent | [`../AGENTS.md`](../AGENTS.md) | The nearest project `AGENTS.md`, architecture, and [standards](standards/documentation.md) |
 | Service or configuration operator | [`ARCHITECTURE.md`](ARCHITECTURE.md) | [environment variables](references/environment-variables.md) and project READMEs |
-| Pi operator or agent author | [`pi-harness/`](pi-harness/) | Its configuration, workflow, and delegation guides |
+| Pi operator or agent author | [`coding-agent-harness/`](coding-agent-harness/) | Its configuration, workflow, and delegation guides |
 | Architecture decision author | [`design-docs/`](design-docs/) | [`ARCHITECTURE.md`](ARCHITECTURE.md) after approval |
 
 ## Contents
@@ -15,7 +15,7 @@ Architecture, conventions, agent-harness documentation, and reference material f
 | File or directory | Description |
 | --- | --- |
 | [`ARCHITECTURE.md`](ARCHITECTURE.md) | Repository layout, projects, containers, and service topology |
-| [`pi-harness/`](pi-harness/) | Pi setup, configuration, extensions, skills, and workflows |
+| [`coding-agent-harness/`](coding-agent-harness/) | Pi setup, configuration, extensions, skills, and workflows |
 | [`design-docs/`](design-docs/) | Durable architectural decisions and cross-service rationale |
 | [`prompts/`](prompts/) | Approved Plannotator plans authored and retained verbatim |
 | [`references/`](references/) | Nx and environment-variable reference material |

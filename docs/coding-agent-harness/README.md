@@ -1,4 +1,4 @@
-# Pi coding harness
+# Coding-agent harness
 
 This repository configures Pi through tracked project files while keeping installed packages and session artifacts local.
 

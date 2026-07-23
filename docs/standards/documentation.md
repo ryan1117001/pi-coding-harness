@@ -15,7 +15,7 @@ Canonical conventions for Markdown and in-code documentation in workspace.
 | [`AGENTS.md`](../../AGENTS.md) | Cross-workspace agent policy and completion checks |
 | `projects/<name>/AGENTS.md` | Project stack, boundaries, commands, and tests |
 | [`docs/ARCHITECTURE.md`](../ARCHITECTURE.md) | Current repository layout, tooling, and service topology |
-| [`docs/pi-harness/`](../pi-harness/) | Pi setup, provenance, skills, agents, and workflows |
+| [`docs/coding-agent-harness/`](../coding-agent-harness/) | Pi setup, provenance, skills, agents, and workflows |
 | [`docs/references/`](../references/) | Lookup tables and operational reference |
 | [`docs/design-docs/`](../design-docs/) | Durable architecture decisions and rationale |
 | [`docs/prompts/`](../prompts/) | Approved Plannotator plans, authored directly at their canonical path |

@@ -2,7 +2,7 @@
 
 **workspace** is an Nx monorepo with a reproducible Pi coding-agent harness. It includes Nx, pnpm, Biome, Vitest, Playwright, Storybook, `@nxlv/python` with uv, project instructions, Agent Skills, delegated agents, planning, diagnostics, web access, and lazy MCP integration.
 
-Read [`AGENTS.md`](./AGENTS.md) for workspace policy, [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the repository map, and [`docs/pi-harness/`](docs/pi-harness/) for Pi setup and extension provenance.
+Read [`AGENTS.md`](./AGENTS.md) for workspace policy, [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the repository map, and [`docs/coding-agent-harness/`](docs/coding-agent-harness/) for Pi setup and extension provenance.
 
 ## Use this template
 
@@ -34,7 +34,7 @@ Scaffold projects with Nx generators, never by hand-writing `project.json`. See 
 | [`projects/web-e2e/`](projects/web-e2e/) | Playwright end-to-end tests for `web`. |
 | [`projects/api/`](projects/api/) | FastAPI service with Python 3.14, uv, pytest, Ruff, async SQLAlchemy, and psycopg3. |
 | [`projects/postgres/`](projects/postgres/) | PostgreSQL 18 image with pgvector and Apache AGE. |
-| [`docs/`](docs/) | Architecture, design decisions, standards, references, approved plans, and Pi harness documentation. |
+| [`docs/`](docs/) | Architecture, design decisions, standards, references, approved plans, and coding-agent-harness documentation. |
 | [`.pi/`](.pi/) | Tracked Pi settings, planning profile, project agents, and prompt templates; runtime packages are ignored. |
 | [`.agents/skills/`](.agents/skills/) | Project and vendored Agent Skills, with upstream provenance in [`skills-lock.json`](skills-lock.json). |
 | [`AGENTS.md`](./AGENTS.md) | Workspace policy loaded by Pi; each project has a narrower `AGENTS.md`. |
@@ -47,5 +47,5 @@ Scaffold projects with Nx generators, never by hand-writing `project.json`. See 
 | Set up, contribute, and run checks | [`CONTRIBUTING.md`](CONTRIBUTING.md) |
 | Understand projects, containers, and service connections | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) |
 | Find references, plans, decisions, and standards | [`docs/`](docs/) |
-| Configure Pi, skills, agents, and workflows | [`docs/pi-harness/`](docs/pi-harness/) |
+| Configure Pi, skills, agents, and workflows | [`docs/coding-agent-harness/`](docs/coding-agent-harness/) |
 | Follow mandatory agent policy | [`AGENTS.md`](./AGENTS.md) |

@@ -7,4 +7,4 @@ Reference material for day-to-day development: tooling conventions, configuratio
 | [`nx-guidelines.md`](nx-guidelines.md) | Nx target naming, scaffolding, verification, and pre-commit integration |
 | [`environment-variables.md`](environment-variables.md) | Runtime configuration for `postgres` and `api`, including defaults and build arguments |
 
-See [`../pi-harness/`](../pi-harness/) for Pi packages and workflows, and [`../pi-harness/skills.md`](../pi-harness/skills.md) for the project skill catalog.
+See [`../coding-agent-harness/`](../coding-agent-harness/) for Pi packages and workflows, and [`../coding-agent-harness/skills.md`](../coding-agent-harness/skills.md) for the project skill catalog.
