@@ -7,10 +7,10 @@ This page links the mandatory workspace policy to the detailed Pi operating guid
 Use Plannotator for non-trivial changes:
 
 1. Start plan mode with `/plannotator` or `pi --plan`.
-2. Create the first draft at `docs/prompts/YYYY_MM_DD_HHMM-slug/README.md`. Revise and approve that same file.
+2. Create the first draft at `docs/prompts/YYYY_MM_DD_HHMM-slug/README.md`. Keep plan-related supporting Markdown, HTML, and image artifacts in that dated directory, and revise the plan through approval.
 3. Submit it through Plannotator's browser review.
-4. After approval, load `save-approved-plan`. It validates the path and adds the index row in [`../prompts/README.md`](../prompts/README.md); it never copies or moves the plan.
-5. Implement the approved checklist. After each completed implementation step, change that step's checkbox from `- [ ]` to `- [x]` in the same plan file, then update the plan-index status as work progresses.
+4. After approval, load `save-approved-plan`. It validates the plan path, allows plan-related supporting artifacts, and adds the index row in [`../prompts/README.md`](../prompts/README.md); it never copies, moves, or alters the archive.
+5. Implement the approved checklist. Review the plan and its artifacts for durable conclusions, then capture applicable information in the appropriate living documentation. After each completed implementation step, change that step's checkbox from `- [ ]` to `- [x]` in the same plan file, then update the plan-index status as work progresses.
 
 If a plan begins elsewhere, stop and ask rather than creating a second plan.
 

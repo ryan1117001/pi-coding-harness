@@ -23,11 +23,11 @@
 ## Agent workflow
 
 1. Read this file, the nearest project `AGENTS.md`, [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), and [`docs/standards/documentation.md`](docs/standards/documentation.md) before editing.
-2. Use Plannotator for non-trivial plans. Start the working plan directly at `docs/prompts/YYYY_MM_DD_HHMM-slug/README.md`; after approval, use `save-approved-plan` to validate and register that same file. Never copy or move an approved plan; check off its implementation steps in that same file as they are completed.
+2. Use Plannotator for non-trivial plans. Start the working plan directly at `docs/prompts/YYYY_MM_DD_HHMM-slug/README.md`; plan-related supporting Markdown, HTML, and image artifacts may remain in that dated directory. After approval, use `save-approved-plan` to validate and register that same file. Never copy, move, or alter the approved plan or its supporting artifacts; check off its implementation steps in that same file as they are completed.
 3. For behavior changes, use RED, GREEN, REFACTOR and confirm the failing test fails for the intended reason. Documentation-, configuration-, formatting-, generated-code, and sandbox-prototype changes are exceptions; state the exception.
 4. Choose work directly only for local, clear, low-risk work. Otherwise follow the [delegation workflow](docs/coding-agent-harness/delegation.md): scout and plan normal work; add oracle review for risky or ambiguous decisions; use parallel read-only discovery for broad separable work.
 5. The parent session owns decisions and synthesis. Keep one writer in a shared checkout; use fresh, read-only reviewers for independent feedback. Use `worktree: true` only for intentional parallel writing from a clean tree.
-6. Assess documentation impact for every behavior, API, configuration, architecture, or workflow change. Use the project `technical-writer` when the resulting documentation work is substantial, cross-file, or user-facing; otherwise update the relevant documentation directly. Follow [`docs/coding-agent-harness/workflows.md`](docs/coding-agent-harness/workflows.md) for planning, review, MCP, and completion detail.
+6. Assess documentation impact for every behavior, API, configuration, architecture, or workflow change. During implementation, capture durable conclusions from approved plans and their supporting artifacts in the appropriate living documentation. Use the project `technical-writer` when the resulting documentation work is substantial, cross-file, or user-facing; otherwise update the relevant documentation directly. Follow [`docs/coding-agent-harness/workflows.md`](docs/coding-agent-harness/workflows.md) for planning, review, MCP, and completion detail.
 
 ## Nx workflow
 

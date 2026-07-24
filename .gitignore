@@ -85,8 +85,6 @@ dist
 # TypeScript project-reference build output (tsc --build)
 out-tsc
 
-# Large local design reference inputs (Figma screenshots) — not committed
-docs/prompts/**/figma/
 
 # Gatsby files
 .cache/

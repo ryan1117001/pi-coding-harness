@@ -18,11 +18,11 @@ Canonical conventions for Markdown and in-code documentation in workspace.
 | [`docs/coding-agent-harness/`](../coding-agent-harness/) | Pi setup, provenance, skills, agents, and workflows |
 | [`docs/references/`](../references/) | Lookup tables and operational reference |
 | [`docs/design-docs/`](../design-docs/) | Durable architecture decisions and rationale |
-| [`docs/prompts/`](../prompts/) | Approved Plannotator plans, authored directly at their canonical path |
+| [`docs/prompts/`](../prompts/) | Approved Plannotator plans and planning-time supporting artifacts, authored directly at their canonical path |
 
 ## Update in the same change
 
-Update relevant documentation when behavior, public APIs, configuration, architecture, or developer workflow changes. Record new service connections in `docs/ARCHITECTURE.md`.
+Update relevant living documentation when behavior, public APIs, configuration, architecture, or developer workflow changes. Plan archives preserve the planning record; promote durable conclusions from plans and their artifacts into the appropriate living documentation. Record new service connections in `docs/ARCHITECTURE.md`.
 
 ## Markdown
 
