@@ -10,106 +10,13 @@
     "npm:@narumitw/pi-retry"
   ],
   "readseek": {
-    "replacedTools": [
-      "read",
-      "edit",
-      "write",
-      "grep"
-    ],
+    "replacedTools": ["read", "edit", "write", "grep"],
     "imageMode": "auto",
     "syntaxValidation": "warn",
     "timeoutMs": 240000,
     "grep": {
       "maxLines": 2000,
       "maxBytes": 51200
-    }
-  },
-  "subagents": {
-    "defaultModel": "openai-codex/gpt-5.6-terra",
-    "agentOverrides": {
-      "scout": {
-        "model": "openai-codex/gpt-5.6-luna",
-        "thinking": "low",
-        "fallbackModels": [
-          "cursor/auto",
-          "github-copilot/claude-haiku-4-5"
-        ]
-      },
-      "researcher": {
-        "model": "openai-codex/gpt-5.6-terra",
-        "thinking": "medium",
-        "fallbackModels": [
-          "cursor/auto",
-          "github-copilot/claude-sonnet-4"
-        ]
-      },
-      "planner": {
-        "model": "openai-codex/gpt-5.6-terra",
-        "thinking": "high",
-        "fallbackModels": [
-          "cursor/auto",
-          "github-copilot/claude-sonnet-4"
-        ]
-      },
-      "context-builder": {
-        "model": "openai-codex/gpt-5.6-terra",
-        "thinking": "medium",
-        "fallbackModels": [
-          "cursor/auto",
-          "github-copilot/claude-sonnet-4"
-        ]
-      },
-      "worker": {
-        "model": "openai-codex/gpt-5.6-terra",
-        "thinking": "medium",
-        "fallbackModels": [
-          "cursor/auto",
-          "github-copilot/claude-sonnet-4"
-        ]
-      },
-      "reviewer": {
-        "model": "openai-codex/gpt-5.6-terra",
-        "thinking": "high",
-        "fallbackModels": [
-          "cursor/auto",
-          "github-copilot/claude-sonnet-4"
-        ]
-      },
-      "oracle": {
-        "model": "openai-codex/gpt-5.6-sol",
-        "thinking": "high",
-        "fallbackModels": [
-          "cursor/auto",
-          "github-copilot/claude-opus-4-8"
-        ]
-      },
-      "delegate": {
-        "model": "openai-codex/gpt-5.6-terra",
-        "thinking": "medium",
-        "fallbackModels": [
-          "cursor/auto",
-          "github-copilot/claude-sonnet-4"
-        ]
-      },
-      "technical-writer": {
-        "model": "openai-codex/gpt-5.6-luna",
-        "thinking": "high",
-        "fallbackModels": [
-          "cursor/auto",
-          "github-copilot/claude-sonnet-4"
-        ]
-      }
-    },
-    "watchdog": {
-      "enabled": true,
-      "main": {
-        "model": "openai-codex/gpt-5.6-sol",
-        "thinking": "high",
-        "fallbackModels": [
-          "cursor/auto",
-          "github-copilot/claude-opus-4-8"
-        ]
-      }
     }
   }
 }
