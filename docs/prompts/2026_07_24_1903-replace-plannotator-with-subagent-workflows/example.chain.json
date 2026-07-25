@@ -1,0 +1,452 @@
+// ============================================================================
+// EXAMPLE CHAIN: Complex feature implementation, TDD-first
+// ----------------------------------------------------------------------------
+// Precondition: this chain executes a plan a human has already read and APPROVED
+// (Claude-Code-style plan gate). The chain therefore does NOT re-litigate scope
+// or ask for approval mid-run. It assumes the approved plan is passed in as {task}.
+//
+// Feature under implementation (illustrative):
+//   "Add idempotency-key support to POST /payments so retried requests with the
+//    same Idempotency-Key header return the original response instead of double-
+//    charging. Keys expire after 24h. Concurrent duplicates must not race."
+//
+// Design principles encoded below:
+//   1. Understand before touching code (scout + structured handoff).
+//   2. TDD: write failing tests FIRST, implement to green, then refactor.
+//   3. Never let one agent both write the tests and grade its own passing.
+//   4. Parallel review across independent axes (correctness / tests / security).
+//   5. Structured outputs at every handoff boundary so downstream agents get
+//      machine-checkable data, not prose they have to re-parse.
+//   6. Worktree isolation only where parallel agents would edit the same tree.
+//   7. Document what SHIPPED (incl. deferrals), as the final phase, not the plan.
+// ============================================================================
+
+{
+  chain: [
+
+    // ------------------------------------------------------------------------
+    // PHASE 1 — CONTEXT
+    // Map the code before changing it. Read-only. Emits a strict schema so the
+    // planner and TDD steps receive concrete file paths and seams, not a vibe.
+    // ------------------------------------------------------------------------
+    {
+      agent: "scout",
+      phase: "Context",
+      label: "Map payments write path",
+      as: "context",
+      task: `Approved plan:
+{task}
+
+Do READ-ONLY recon of the payment-creation path relevant to adding idempotency.
+Do not edit code. Identify:
+- the request entry point(s) for POST /payments and their handler files
+- where the DB write / charge side-effect happens (the thing we must not double-run)
+- existing middleware, error types, and response-shape conventions to match
+- current test files + framework + how tests are run
+- any existing idempotency / dedup / caching primitives already in the repo
+- concurrency risks (transactions, locks, connection pooling) at the write site
+- where docs live (README, /docs, API reference) and their format`,
+      outputSchema: {
+        type: "object",
+        required: ["entry_points", "side_effect_site", "test_setup", "conventions", "risks"],
+        properties: {
+          entry_points:   { type: "array", items: { type: "string" } }, // file:line
+          side_effect_site: {
+            type: "object",
+            required: ["file", "description"],
+            properties: {
+              file:        { type: "string" },
+              description: { type: "string" }
+            }
+          },
+          test_setup: {
+            type: "object",
+            required: ["framework", "run_command", "test_dirs"],
+            properties: {
+              framework:   { type: "string" },
+              run_command: { type: "string" },      // e.g. "npm test -- payments"
+              test_dirs:   { type: "array", items: { type: "string" } }
+            }
+          },
+          existing_primitives: { type: "array", items: { type: "string" } },
+          conventions:  { type: "array", items: { type: "string" } },
+          risks:        { type: "array", items: { type: "string" } },
+          docs_locations: { type: "array", items: { type: "string" } }
+        }
+      }
+    },
+
+    // ------------------------------------------------------------------------
+    // PHASE 2 — PLAN → TEST MATRIX
+    // Turn the approved plan + context into a concrete, ordered test matrix.
+    // This is the contract the whole TDD loop implements against. Read-only.
+    // We derive the tests HERE, separately, so the implementer doesn't get to
+    // define its own definition of "done".
+    // ------------------------------------------------------------------------
+    {
+      agent: "planner",
+      phase: "Plan",
+      label: "Derive test matrix",
+      as: "testplan",
+      task: `Approved plan:
+{task}
+
+Repo context (structured):
+{outputs.context}
+
+Produce the TEST MATRIX we will implement TDD-style. For each behavior give a
+test id, a plain-English assertion, the layer (unit|integration), and whether it
+is a happy path, edge case, or failure/concurrency case. Cover at minimum:
+- first request with a key: charges normally, stores response under the key
+- retry with same key + same body: returns the STORED response, does NOT re-charge
+- retry with same key + DIFFERENT body: rejected as a conflict (do not silently
+  return the old response)
+- missing/absent key: falls back to current non-idempotent behavior
+- key TTL: an expired key behaves like a fresh request
+- concurrency: two simultaneous requests with the same key must not both charge
+Do NOT write code. Output only the matrix + a short note on the smallest slice
+to implement first.`,
+      outputSchema: {
+        type: "object",
+        required: ["tests", "first_slice"],
+        properties: {
+          tests: {
+            type: "array",
+            items: {
+              type: "object",
+              required: ["id", "assertion", "layer", "kind"],
+              properties: {
+                id:        { type: "string" },
+                assertion: { type: "string" },
+                layer:     { type: "string", enum: ["unit", "integration"] },
+                kind:      { type: "string", enum: ["happy", "edge", "failure", "concurrency"] }
+              }
+            }
+          },
+          first_slice: { type: "string" }
+        }
+      }
+    },
+
+    // ------------------------------------------------------------------------
+    // PHASE 3 — RED
+    // Write the failing tests from the matrix. Nothing else. The tests MUST run
+    // and MUST fail for the right reason (feature missing), not because of typos
+    // or import errors. Forked context so it inherits the working tree state.
+    // ------------------------------------------------------------------------
+    {
+      agent: "worker",
+      phase: "TDD:Red",
+      label: "Write failing tests",
+      as: "red",
+      context: "fork",
+      task: `Test matrix:
+{outputs.testplan}
+
+Repo context:
+{outputs.context}
+
+Write the tests described in the matrix, matching the repo's existing framework
+and conventions ({outputs.context}). RULES:
+- Write ONLY test code. Do not implement the feature.
+- Every new test must fail because the behavior does not exist yet — not because
+  of a syntax/import/setup error. Run the suite and confirm each new test fails
+  for the intended reason.
+- Return the exact command you ran, the list of new test files/cases, and the
+  observed failure output (trimmed) proving they are red.`,
+      outputSchema: {
+        type: "object",
+        required: ["run_command", "new_tests", "all_red"],
+        properties: {
+          run_command: { type: "string" },
+          new_tests:   { type: "array", items: { type: "string" } },
+          all_red:     { type: "boolean" },
+          failure_excerpt: { type: "string" }
+        }
+      }
+    },
+
+    // ------------------------------------------------------------------------
+    // PHASE 4 — GREEN
+    // Implement the minimum production code to make the red tests pass. Do not
+    // change the tests (except obviously-wrong ones, which must be flagged, not
+    // silently rewritten to pass). Forked so it sees the tests written in Red.
+    // ------------------------------------------------------------------------
+    {
+      agent: "worker",
+      phase: "TDD:Green",
+      label: "Implement to green",
+      as: "green",
+      context: "fork",
+      task: `Failing tests are in place:
+{outputs.red}
+
+Approved plan:
+{task}
+
+Context:
+{outputs.context}
+
+Implement the SMALLEST production change that makes all the new tests pass, plus
+keeps the existing suite green. RULES:
+- Do not weaken or delete tests to get to green. If a test is genuinely wrong,
+  STOP and report it in "test_issues" instead of editing it to pass.
+- Handle the concurrency case for real (transaction / unique constraint / lock),
+  not with a sleep or a comment.
+- Run '{outputs.red.run_command}' plus the full suite. Return both results.`,
+      outputSchema: {
+        type: "object",
+        required: ["files_changed", "target_suite_pass", "full_suite_pass"],
+        properties: {
+          files_changed:     { type: "array", items: { type: "string" } },
+          target_suite_pass: { type: "boolean" },
+          full_suite_pass:   { type: "boolean" },
+          test_issues:       { type: "array", items: { type: "string" } },
+          notes:             { type: "string" }
+        }
+      }
+    },
+
+    // ------------------------------------------------------------------------
+    // PHASE 5 — REFACTOR
+    // Tests are green; now improve the implementation without changing behavior.
+    // Suite must stay green the entire time. Still forked.
+    // ------------------------------------------------------------------------
+    {
+      agent: "worker",
+      phase: "TDD:Refactor",
+      label: "Refactor under green",
+      as: "refactor",
+      context: "fork",
+      task: `Green implementation:
+{outputs.green}
+
+Refactor for clarity and to match repo conventions ({outputs.context.conventions})
+WITHOUT changing observable behavior. Extract the idempotency logic into a
+cohesive, testable unit if it's currently inline in the handler. Re-run the full
+suite after every meaningful change; it must remain green. Return the final diff
+summary and confirmation the suite is still green.`,
+      outputSchema: {
+        type: "object",
+        required: ["full_suite_pass", "summary"],
+        properties: {
+          full_suite_pass: { type: "boolean" },
+          files_changed:   { type: "array", items: { type: "string" } },
+          summary:         { type: "string" }
+        }
+      }
+    },
+
+    // ------------------------------------------------------------------------
+    // PHASE 6 — PARALLEL REVIEW (fan-out)
+    // Three FRESH reviewers, independent axes, so no single reviewer's blind spot
+    // decides the outcome. Fresh context (default) keeps them unbiased by the
+    // implementer's rationale. Each returns structured findings we can merge.
+    // failFast:false so one reviewer erroring doesn't kill the others.
+    // ------------------------------------------------------------------------
+    {
+      phase: "Review",
+      parallel: [
+        {
+          agent: "reviewer",
+          label: "Correctness & concurrency",
+          as: "review_correctness",
+          task: `Review the change for correctness against the approved plan:
+{task}
+and the test matrix: {outputs.testplan}.
+Focus on the double-charge / race guarantee, TTL handling, and the same-key-
+different-body conflict path. Files changed: {outputs.refactor.files_changed}.
+Return structured findings.`,
+          outputSchema: {
+            type: "object",
+            required: ["findings"],
+            properties: {
+              findings: {
+                type: "array",
+                items: {
+                  type: "object",
+                  required: ["severity", "location", "issue"],
+                  properties: {
+                    severity: { type: "string", enum: ["blocker", "major", "minor", "nit"] },
+                    location: { type: "string" },
+                    issue:    { type: "string" },
+                    suggested_fix: { type: "string" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          agent: "reviewer",
+          label: "Test quality",
+          as: "review_tests",
+          task: `Review TEST QUALITY only. Do the new tests actually pin the
+behavior in {outputs.testplan}, or are any tautological / mocked into
+meaninglessness? Is the concurrency test real? Any matrix rows with no
+corresponding test? Return structured findings using the same schema.`,
+          outputSchema: {
+            type: "object",
+            required: ["findings"],
+            properties: {
+              findings: {
+                type: "array",
+                items: {
+                  type: "object",
+                  required: ["severity", "location", "issue"],
+                  properties: {
+                    severity: { type: "string", enum: ["blocker", "major", "minor", "nit"] },
+                    location: { type: "string" },
+                    issue:    { type: "string" },
+                    suggested_fix: { type: "string" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          agent: "reviewer",
+          label: "Security & abuse",
+          as: "review_security",
+          task: `Security review: key collisions across tenants/users, unbounded
+key storage, replay of stored responses leaking data across auth contexts,
+injection via the Idempotency-Key header. Return structured findings using the
+same schema.`,
+          outputSchema: {
+            type: "object",
+            required: ["findings"],
+            properties: {
+              findings: {
+                type: "array",
+                items: {
+                  type: "object",
+                  required: ["severity", "location", "issue"],
+                  properties: {
+                    severity: { type: "string", enum: ["blocker", "major", "minor", "nit"] },
+                    location: { type: "string" },
+                    issue:    { type: "string" },
+                    suggested_fix: { type: "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      concurrency: 3,
+      failFast: false
+    },
+
+    // ------------------------------------------------------------------------
+    // PHASE 7 — SYNTHESIZE & APPLY (fan-in)
+    // Merge the three reviews, apply blockers+majors, re-run the suite, and stop
+    // for anything that would exceed the approved plan's scope rather than
+    // inventing new scope on its own.
+    // ------------------------------------------------------------------------
+    {
+      agent: "worker",
+      phase: "Finalize",
+      label: "Apply review feedback",
+      as: "final",
+      context: "fork",
+      task: `Reviews:
+- correctness: {outputs.review_correctness}
+- tests:       {outputs.review_tests}
+- security:    {outputs.review_security}
+
+Apply every 'blocker' and 'major' finding. Apply 'minor'/'nit' only if cheap and
+safe. RULES:
+- If a finding would require work beyond the approved plan ({task}), do NOT
+  silently expand scope: implement what's in-plan, and list the out-of-scope
+  items under "deferred" for the human.
+- Keep TDD discipline: if a fix needs new behavior, add a failing test first,
+  then make it pass.
+- Re-run the full suite. Return the final state.`,
+      outputSchema: {
+        type: "object",
+        required: ["applied", "full_suite_pass", "deferred"],
+        properties: {
+          applied:         { type: "array", items: { type: "string" } },
+          deferred:        { type: "array", items: { type: "string" } },
+          files_changed:   { type: "array", items: { type: "string" } },
+          full_suite_pass: { type: "boolean" },
+          summary:         { type: "string" }
+        }
+      }
+    },
+
+    // ------------------------------------------------------------------------
+    // PHASE 8 — DOCUMENT (last, deliberately)
+    // Runs AFTER finalize so it documents what actually shipped — including
+    // anything the finalize step deferred — not what the plan aspired to.
+    // Fresh context: the writer should read the code/plan as the source of
+    // truth rather than inherit the implementer's in-head justifications.
+    // Writes concise docs for BOTH audiences: humans (API reference / changelog)
+    // and agents (a machine-readable behavior contract future runs can rely on).
+    // Constrained to doc surfaces + the docs_locations scout found, so it can't
+    // quietly change production code. Structured output so the harness can
+    // verify docs were actually written and where.
+    // ------------------------------------------------------------------------
+    {
+      agent: "technical-writer",
+      phase: "Docs",
+      label: "Document shipped behavior",
+      as: "docs",
+      task: `Approved plan:
+{task}
+
+What actually shipped:
+- implementation summary: {outputs.refactor.summary}
+- final changes + deferrals: {outputs.final}
+- behavior contract (test matrix): {outputs.testplan}
+- files touched: {outputs.final.files_changed}
+- doc locations in repo: {outputs.context.docs_locations}
+
+Create or UPDATE concise documentation for two audiences. Keep it tight — no
+filler, match existing doc style.
+
+1. HUMAN-FACING (in the repo's existing docs surfaces):
+   - API reference for the Idempotency-Key header on POST /payments: semantics,
+     the same-key/different-body 409 conflict, the 24h TTL, and the no-double-
+     charge concurrency guarantee.
+   - A short changelog / release-note entry.
+2. AGENT-FACING (a concise machine-readable behavior contract, e.g. a docs/
+   markdown block or structured note): the invariants a future agent must
+   preserve — "same key + same body => stored response, no re-charge",
+   "same key + different body => 409", "expired key => fresh request",
+   "concurrent duplicates => at most one charge".
+
+RULES:
+- Edit ONLY documentation surfaces ({outputs.context.docs_locations}) and doc
+  files you create. Do NOT modify production or test code.
+- Document reality, including anything under {outputs.final.deferred}: note known
+  limitations honestly rather than describing intended-but-unshipped behavior.
+- Return the list of doc files created/updated and a one-line summary of each.`,
+      outputSchema: {
+        type: "object",
+        required: ["docs_written", "human_docs", "agent_contract"],
+        properties: {
+          docs_written: {
+            type: "array",
+            items: {
+              type: "object",
+              required: ["path", "action", "summary"],
+              properties: {
+                path:    { type: "string" },
+                action:  { type: "string", enum: ["created", "updated"] },
+                summary: { type: "string" }
+              }
+            }
+          },
+          human_docs:     { type: "array", items: { type: "string" } }, // paths
+          agent_contract: { type: "string" },                           // path
+          limitations_documented: { type: "array", items: { type: "string" } }
+        }
+      }
+    }
+  ],
+
+  // No clarify UI, run start-to-finish: the human already approved the plan.
+  clarify: false
+}

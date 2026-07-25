@@ -5,7 +5,6 @@
     "npm:pi-lens",
     "npm:pi-subagents",
     "npm:pi-mcp-adapter",
-    "npm:@plannotator/pi-extension",
     "npm:pi-intercom",
     "npm:@gotgenes/pi-permission-system",
     "npm:@narumitw/pi-retry"

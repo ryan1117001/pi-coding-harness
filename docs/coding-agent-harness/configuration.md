@@ -5,11 +5,12 @@ Tracked configuration makes the project harness reproducible. Package installati
 | File | Consumer | Maintainer action |
 | --- | --- | --- |
 | [`.pi/settings.json`](../../.pi/settings.json) | Pi and installed extensions | Pin packages and configure ReadSeek and subagent defaults. |
-| [`.pi/plannotator.json`](../../.pi/plannotator.json) | Plannotator | Keep non-trivial plans at their canonical `docs/prompts/` path. |
+| [`.pi/chains/`](../../.pi/chains/README.md) | `pi-subagents` | Store reusable generic chains and plan-specific chains in their documented namespaces. |
 | [`.mcp.json`](../../.mcp.json) | MCP adapter | Define shared MCP servers. |
 | [`compose.yml`](../../compose.yml) | Docker Compose | Define local service containers, ports, and Compose-only service wiring. |
 | [`.env.example`](../../.env.example) | Local service operators | Provide safe local override examples. |
 | [`../references/environment-variables.md`](../references/environment-variables.md) | Humans and agents | Explain runtime configuration, consumers, and defaults. |
+| [`.pi/prompts/draft-plan.md`](../../.pi/prompts/draft-plan.md) | Parent agents | Describe the canonical draft, approval, registration, and explicit-execution lifecycle. |
 
 ## File tools
 

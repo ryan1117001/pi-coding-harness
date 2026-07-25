@@ -12,7 +12,8 @@ Local skills are intentionally absent from the lockfile and may be edited in thi
 | --- | --- |
 | `codebase-analysis` | Evidence-backed exploration and structural review criteria; load for unfamiliar or research-heavy review work. |
 | `multi-stage-dockerfile` | Focused multi-stage container-image guidance. |
-| `save-approved-plan` | Validates and registers the already-canonical Plannotator plan without copying it. |
+| `record-plan-draft` | Validates and records a canonical Markdown draft and matching chain without inferring approval or starting work. |
+| `save-approved-plan` | Validates explicit approval and promotes the matching draft row without copying the plan or starting its chain. |
 | `webapp-testing` | Browser interaction and debugging with the installed Playwright stack. |
 
 ## Delegation skill

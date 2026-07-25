@@ -1,0 +1,52 @@
+{
+  "name": "saved-plan-2026_07_24_1903-replace-plannotator-with-subagent-workflows",
+  "description": "Plan-specific execution chain for docs/prompts/2026_07_24_1903-replace-plannotator-with-subagent-workflows/README.md. Run only after explicit user approval and plan-index registration.",
+  "chain": [
+    {
+      "agent": "scout",
+      "phase": "Context",
+      "label": "Inspect approved scope",
+      "task": "Read docs/prompts/2026_07_24_1903-replace-plannotator-with-subagent-workflows/README.md and the files it names. Summarize current state, constraints, and focused validation commands. Do not modify files.",
+      "output": "context.md",
+      "outputMode": "file-only"
+    },
+    {
+      "agent": "worker",
+      "phase": "Implementation",
+      "label": "Implement approved plan",
+      "task": "Implement only the approved canonical plan at docs/prompts/2026_07_24_1903-replace-plannotator-with-subagent-workflows/README.md, using the context below. You are the sole writer. Preserve the plan's scope, use TDD for behavior changes, treat documentation/configuration-only work as the documented exception, update living documentation, and run focused validation. Do not edit the canonical plan or `docs/prompts/README.md`; the parent alone updates checkboxes and index status after reviewing evidence. Stop and report any required unapproved decision.\n\nContext:\n{previous}",
+      "output": "implementation.md",
+      "outputMode": "file-only",
+      "progress": true
+    },
+    {
+      "parallel": [
+        {
+          "agent": "reviewer",
+          "phase": "Review",
+          "label": "Review lifecycle correctness",
+          "task": "Review the current diff against the approved plan and the worker report below. Check lifecycle gates, chain metadata, and parent ownership. Do not modify project files; return only evidence-backed findings.\n\nWorker report:\n{previous}",
+          "output": "lifecycle-review.md",
+          "outputMode": "file-only"
+        },
+        {
+          "agent": "reviewer",
+          "phase": "Review",
+          "label": "Review documentation consistency",
+          "task": "Review the current diff against the approved plan and the worker report below. Check that all active documentation consistently replaces Plannotator and that links resolve. Do not modify project files; return only evidence-backed findings.\n\nWorker report:\n{previous}",
+          "output": "documentation-review.md",
+          "outputMode": "file-only"
+        }
+      ],
+      "concurrency": 2
+    },
+    {
+      "agent": "reviewer",
+      "phase": "Validation",
+      "label": "Validate completion",
+      "task": "Validate the final diff against the approved plan. Confirm the lifecycle remains non-executing until an explicit parent action, documentation is consistent, and required checks were run. Do not modify files; report blockers only.",
+      "output": "validation.md",
+      "outputMode": "file-only"
+    }
+  ]
+}

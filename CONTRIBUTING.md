@@ -21,7 +21,7 @@ The `api` and `postgres` projects run through root Docker Compose. Environment v
 - Update documentation in the same change when behavior, APIs, configuration, architecture, or developer workflow changes.
 - Follow the nearest project `AGENTS.md` for stack-specific boundaries, tests, and commands.
 - Use Conventional Commits (`feat:`, `fix:`, `chore:`, and related types), enforced through [`.cz.toml`](.cz.toml).
-- Use Plannotator for non-trivial plans. The plan is authored directly under `docs/prompts/` and registered after approval without making a copy.
+- For non-trivial work, use `pi-subagents` to prepare a canonical Markdown draft and matching plan-specific chain. Record the draft, obtain explicit editor/user approval, register it with `save-approved-plan`, and start the chain only on a separate explicit user request. See [`AGENTS.md`](AGENTS.md) for the lifecycle.
 
 ## Checks before pushing
 

@@ -21,7 +21,7 @@ Pi installs missing project packages under ignored `.pi/npm/`. A clean checkout 
 | Workspace policy | [`AGENTS.md`](../../AGENTS.md) | Cross-workspace change and completion rules |
 | Project policy | `projects/*/AGENTS.md` | Stack, boundaries, commands, and tests |
 | Packages and runtime profiles | [`.pi/settings.json`](../../.pi/settings.json) | Exact package pins, file-tool behavior, and subagent profiles |
-| Planning | [`.pi/plannotator.json`](../../.pi/plannotator.json) | Canonical plan path and approval handoff |
+| Planning | [`docs/prompts/`](../prompts/README.md), [`.pi/prompts/draft-plan.md`](../../.pi/prompts/draft-plan.md), and [`.pi/chains/`](../../.pi/chains/README.md) | Canonical drafts, lifecycle guidance, and saved-chain namespaces |
 | Project agents | [`.pi/agents/`](../../.pi/agents/) | Roles not covered by package builtins |
 | Prompt templates | [`.pi/prompts/`](../../.pi/prompts/) | Unique repeatable repository checks |
 | Skills | [`.agents/skills/`](../../.agents/skills/) | Agent Skills discovered natively by Pi |

@@ -1,18 +1,21 @@
 # docs/prompts/
 
-Approved implementation plans and their planning-time artifacts. Plannotator creates each working plan directly at its canonical archive path and revises that same plan through approval:
+Canonical Markdown implementation plans and their planning-time artifacts. The parent uses `pi-subagents` to prepare each draft directly at its canonical archive path, with one matching plan-specific chain:
 
 ```text
 docs/prompts/YYYY_MM_DD_HHMM-brief-description/README.md
 ```
 
-Each dated directory requires `README.md` as its approved plan, index target, and entry point. It may also contain committed, plan-related supporting Markdown, HTML, and image artifacts, including organized subdirectories. Link supporting artifacts from the plan when they inform its decisions. Keep only material that captures what was considered or planned at authoring time; do not store credentials, dependencies, generated build output, or implementation logs there. After approval, preserve the plan and its artifacts as the planning record; update only completed plan-step checkboxes in `README.md`.
+Each dated directory requires `README.md` as its canonical plan, index target, and entry point. It may also contain committed, plan-related supporting Markdown, HTML, and image artifacts, including organized subdirectories. Link supporting artifacts from the plan when they inform its decisions. Keep only material that captures what was considered or planned at authoring time; do not store credentials, dependencies, generated build output, or implementation logs there. After approval, preserve the plan and its artifacts as the planning record; update only completed plan-step checkboxes in `README.md`.
 
-After approval, the `save-approved-plan` skill validates the canonical plan path and registers it below before implementation. It never copies, moves, splits, or alters the plan archive. During implementation, promote durable decisions, behavior, interfaces, configuration, architecture, and workflow guidance from the plan and its artifacts into the appropriate living documentation. Update the index status separately.
+[`.pi/chains/saved-plans/`](../../.pi/chains/saved-plans/README.md) contains plan-specific execution chains. A draft chain may be reviewed with its plan, but the parent runs it only for its linked canonical plan after explicit user approval and registration in this index; chain discovery does not enforce those preconditions.
+
+Use `record-plan-draft` to validate a `status: draft` plan and create or retain one `📝 draft` row. The user reviews the canonical Markdown plan and matching chain in an editor. After explicit approval, `save-approved-plan` validates the canonical path and matching chain, promotes that same row to `⬜ not started`, and never starts execution. During implementation, promote durable decisions, behavior, interfaces, configuration, architecture, and workflow guidance from the plan and its artifacts into the appropriate living documentation. Update the index status separately.
 
 ## Status legend
 
 - `⬜ not started`
+- `📝 draft`
 - `🟡 in progress`
 - `🟢 partial`
 - `✅ completed`
@@ -27,3 +30,4 @@ After approval, the `save-approved-plan` skill validates the canonical plan path
 
 | Plan | Status | Description |
 | --- | --- | --- |
+| [2026_07_24_1903-replace-plannotator-with-subagent-workflows](2026_07_24_1903-replace-plannotator-with-subagent-workflows/README.md) | ✅ completed | Adopt editor-reviewed Markdown plans and plan-specific pi-subagents chains. |

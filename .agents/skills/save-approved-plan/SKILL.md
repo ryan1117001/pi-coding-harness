@@ -1,11 +1,11 @@
 ---
 name: save-approved-plan
-description: Validate and register the canonical plan file immediately after Plannotator approval. Use before implementation; never copy or move the approved plan, and track execution by checking off completed steps.
+description: Validate and register an explicitly approved canonical Markdown plan. Use after draft recording and before implementation; never copy or move the plan, or start its chain.
 ---
 
-# Register an approved Plannotator plan
+# Register an approved plan
 
-Plannotator uses the archived plan as its working file from the first draft onward. After approval, register that same file in [`docs/prompts/README.md`](../../../docs/prompts/README.md) before changing implementation files.
+Use this procedure after the user explicitly approves a canonical Markdown draft. It promotes that draft's existing `📝 draft` row in [`docs/prompts/README.md`](../../../docs/prompts/README.md) to `⬜ not started`. Registration never executes the matching chain.
 
 ## Required shape
 
@@ -13,39 +13,31 @@ Plannotator uses the archived plan as its working file from the first draft onwa
 docs/prompts/
   README.md
   YYYY_MM_DD_HHMM-brief-description/
-    README.md                 # approved plan and index target
-    research.md               # optional planning artifact
-    diagrams/
-      tradeoffs.html          # optional planning artifact
-      flow.png                # optional planning artifact
+    README.md
+.pi/chains/saved-plans/
+  YYYY_MM_DD_HHMM-brief-description.chain.json
 ```
 
-- `YYYY_MM_DD_HHMM` is the local authoring date and 24-hour time; use `0000` only when the time was unavailable when planning began.
-- The slug is short, descriptive kebab-case.
-- `README.md` is required and is the only approved plan entry point. The dated directory may also contain committed, plan-related supporting Markdown, HTML, and image artifacts, including subdirectories.
+- `README.md` is the canonical plan entry point. Its dated directory may contain committed planning-time Markdown, HTML, and image artifacts, including subdirectories.
 - Supporting artifacts capture planning-time evidence and decisions. They must not contain credentials, dependencies, generated build output, or implementation logs.
+- The canonical plan uses `docs/prompts/YYYY_MM_DD_HHMM-slug/README.md`, has frontmatter `status: approved`, and links from `Workflow` to its exact matching saved chain.
+- The matching chain name and description identify the same canonical plan timestamp and slug.
 - Approved prose, scope, step order, and supporting artifacts remain unchanged; completed implementation-step checkboxes are the only permitted post-approval plan edits.
 
-## Workflow
+## Procedure
 
-1. Read Plannotator's approved `planFilePath` and any supporting artifacts in its dated directory.
-2. Validate that `planFilePath` already matches `docs/prompts/YYYY_MM_DD_HHMM-slug/README.md`. Allow only plan-related supporting Markdown, HTML, and image artifacts beside it; do not require the directory to be otherwise empty.
-3. If the plan path is not canonical or directory contents are unrelated, stop and ask the user how to proceed. Do not create a second copy, move the approved file, or silently normalize its content.
-4. Add one row to `docs/prompts/README.md` if the exact plan is not already registered:
-
-   ```markdown
-   | [YYYY_MM_DD_HHMM-brief-description](YYYY_MM_DD_HHMM-brief-description/README.md) | ⬜ not started | One-sentence description of the approved outcome. |
-   ```
-
-5. Begin implementation only after the index link resolves.
-6. As each implementation step is completed, change that exact checklist item in the registered plan from `- [ ]` to `- [x]`, then update the index status: `🟡 in progress`, `🟢 partial`, or `✅ completed`. Do not alter approved prose, scope, step order, supporting artifacts, or unchecked steps.
-7. Before completion, review the plan and its artifacts for durable decisions, behavior, interfaces, configuration, architecture, or workflow guidance. Capture applicable conclusions in the appropriate living documentation rather than leaving the archive as the sole record.
+1. Confirm explicit user approval in the conversation or `status: approved` in the canonical plan. If neither exists, stop.
+2. Read the plan, matching saved chain, and plan index. Validate the canonical path, required plan structure, exact chain link, and matching timestamp/slug in chain metadata.
+3. Find index rows for the exact canonical plan path. Require exactly one `📝 draft` row. If no row, more than one row, or a different status exists, stop and ask the parent to resolve the lifecycle conflict.
+4. Promote that row to `⬜ not started` without creating a duplicate row. Recheck that the index link resolves.
+5. Begin implementation only after registration and only after a separate explicit user request. The parent then decides whether to run the matching saved chain.
+6. As each implementation step completes, change that exact checklist item from `- [ ]` to `- [x]` in the registered plan and update the index status to `🟡 in progress`, `🟢 partial`, or `✅ completed`.
+7. Before completion, promote durable behavior, interface, configuration, architecture, and workflow conclusions into living documentation rather than leaving the archive as the sole record.
 
 ## Prohibited
 
-- Copying an approved plan from `PLAN.md`, `plans/`, a session message, or another temporary path.
-- Rewriting, reformatting, summarizing, splitting, or changing approved prose, scope, or step order.
-- Registering an unapproved draft.
-- Starting implementation before registration.
-- Adding execution notes or changing a checkbox before its corresponding implementation step is complete.
-- Adding unrelated material, credentials, dependencies, generated output, or implementation logs to a dated plan directory.
+- Registering an unapproved draft or inferring approval.
+- Starting `/run-chain`, implementation, or modifying implementation checkboxes during registration.
+- Creating a duplicate index row or silently resolving contradictory lifecycle rows.
+- Copying, moving, rewriting, splitting, or reformatting the canonical plan or its planning artifacts.
+- Adding credentials, dependencies, generated output, implementation logs, or unrelated material to a dated plan directory.

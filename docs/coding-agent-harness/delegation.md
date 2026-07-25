@@ -51,6 +51,7 @@ flowchart LR
 - Use fresh context for independent exploration and review. Use forked context only when the child needs the approved session history.
 - Reviewers inspect the actual files, plan, or diff and return evidence with paths and lines. The parent or designated writer applies only accepted findings.
 - Escalate product, architecture, security, and scope decisions rather than guessing. Stop repeated review once remaining feedback is optional, deferred, or needs an unapproved decision.
+- Before `/run-chain` for a chain in `.pi/chains/saved-plans/`, verify that its linked canonical plan has explicit user approval and a registered plan-index row. These are plan-specific execution artifacts; discovery alone is not authorization to run them.
 
 ## Plain-language requests
 

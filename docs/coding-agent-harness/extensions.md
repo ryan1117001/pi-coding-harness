@@ -11,7 +11,6 @@ Pi packages execute with the user's permissions. The exact pins below are the `p
 | [`pi-lens`](https://github.com/apmantza/pi-lens) | 3.8.71 | LSP diagnostics, read guards, structural checks, and project analysis. |
 | [`pi-subagents`](https://github.com/nicobailon/pi-subagents) | 0.35.1 | Builtin delegation roles, orchestration, and worktree support. |
 | [`pi-mcp-adapter`](https://github.com/nicobailon/pi-mcp-adapter) | 2.11.0 | Lazy MCP discovery through the shared [`.mcp.json`](../../.mcp.json). |
-| [`@plannotator/pi-extension`](https://github.com/backnotprop/plannotator) | 0.24.2 | File-based planning, browser approval, progress tracking, and review. |
 | [`pi-intercom`](https://github.com/nicobailon/pi-intercom) | 0.6.0 | Direct messages between related Pi sessions on the same machine. |
 | [`@gotgenes/pi-permission-system`](https://github.com/gotgenes/pi-packages) | 20.10.0 | Permission gates for tools, commands, MCP, skills, and file paths. |
 

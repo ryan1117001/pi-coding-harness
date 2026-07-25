@@ -17,6 +17,6 @@ Architecture, conventions, agent-harness documentation, and reference material f
 | [`ARCHITECTURE.md`](ARCHITECTURE.md) | Repository layout, projects, containers, and service topology |
 | [`coding-agent-harness/`](coding-agent-harness/) | Pi setup, configuration, extensions, skills, and workflows |
 | [`design-docs/`](design-docs/) | Durable architectural decisions and cross-service rationale |
-| [`prompts/`](prompts/) | Approved Plannotator plans authored and retained verbatim |
+| [`prompts/`](prompts/) | Canonical Markdown plans, their index, and planning-time supporting artifacts |
 | [`references/`](references/) | Nx and environment-variable reference material |
 | [`standards/`](standards/) | Canonical documentation conventions |

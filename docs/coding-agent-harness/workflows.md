@@ -4,23 +4,28 @@ This page links the mandatory workspace policy to the detailed Pi operating guid
 
 ## Plan and execute
 
-Use Plannotator for non-trivial changes:
+Use an editor-reviewed Markdown plan for non-trivial changes:
 
-1. Start plan mode with `/plannotator` or `pi --plan`.
-2. Create the first draft at `docs/prompts/YYYY_MM_DD_HHMM-slug/README.md`. Keep plan-related supporting Markdown, HTML, and image artifacts in that dated directory, and revise the plan through approval.
-3. Submit it through Plannotator's browser review.
-4. After approval, load `save-approved-plan`. It validates the plan path, allows plan-related supporting artifacts, and adds the index row in [`../prompts/README.md`](../prompts/README.md); it never copies, moves, or alters the archive.
-5. Implement the approved checklist. Review the plan and its artifacts for durable conclusions, then capture applicable information in the appropriate living documentation. After each completed implementation step, change that step's checkbox from `- [ ]` to `- [x]` in the same plan file, then update the plan-index status as work progresses.
+1. The parent uses `pi-subagents` read-only context work and `planner` as needed, then creates a canonical `status: draft` plan at `docs/prompts/YYYY_MM_DD_HHMM-slug/README.md` and its matching plan-specific saved chain.
+2. The parent runs `record-plan-draft`. It validates the canonical plan and chain and creates or retains one `📝 draft` row in [`../prompts/README.md`](../prompts/README.md). It does not infer approval or start work.
+3. The user reviews the Markdown plan and matching chain in an editor. Approval is explicit: the user changes the plan to `status: approved` or directs the parent to record that status.
+4. The parent runs `save-approved-plan`. It validates approval and promotes the existing draft row to `⬜ not started`; it never copies or moves the archive, or starts execution.
+5. Only a separate explicit user request starts implementation. The parent then runs the matching saved chain and updates completed checklist items and index status from actual evidence.
 
 If a plan begins elsewhere, stop and ask rather than creating a second plan.
 
+### Saved plan chains
+
+[`.pi/chains/saved-plans/`](../../.pi/chains/saved-plans/README.md) is reserved for plan-specific execution chains. Run one only when its linked canonical plan has explicit user approval and is registered in [`docs/prompts/README.md`](../prompts/README.md). The parent verifies these conditions before `/run-chain`; chain discovery does not enforce them.
+
 ```mermaid
 flowchart LR
-  D[Draft at canonical path] --> R[Plannotator review]
-  R --> A[Approval]
+  D[Draft and matching chain] --> R[record-plan-draft]
+  R --> E[Editor review]
+  E --> A[Explicit approval]
   A --> S[save-approved-plan]
-  S --> I[Implement approved checklist]
-  I --> V[Check off completed plan steps and update index status]
+  S --> X[Explicit user request]
+  X --> I[Run saved chain and update progress]
 ```
 
 ## Delegate
