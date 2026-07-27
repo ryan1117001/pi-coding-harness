@@ -4,15 +4,9 @@ This page links the mandatory workspace policy to the detailed Pi operating guid
 
 ## Plan and execute
 
-Use an editor-reviewed Markdown plan for non-trivial changes:
+[`../prompts/README.md`](../prompts/README.md) is the detailed source for plan archives, status values, approval, registration, and progress updates. For a non-trivial change, the parent uses `pi-subagents` read-only context work and `planner` as needed, then creates the canonical plan and matching saved chain described there.
 
-1. The parent uses `pi-subagents` read-only context work and `planner` as needed, then creates a canonical `status: draft` plan at `docs/prompts/YYYY_MM_DD_HHMM-slug/README.md` and its matching plan-specific saved chain.
-2. The parent runs `record-plan-draft`. It validates the canonical plan and chain and creates or retains one `📝 draft` row in [`../prompts/README.md`](../prompts/README.md). It does not infer approval or start work.
-3. The user reviews the Markdown plan and matching chain in an editor. Approval is explicit: the user changes the plan to `status: approved` or directs the parent to record that status.
-4. The parent runs `save-approved-plan`. It validates approval and promotes the existing draft row to `⬜ not started`; it never copies or moves the archive, or starts execution.
-5. Only a separate explicit user request starts implementation. The parent then runs the matching saved chain and updates completed checklist items and index status from actual evidence.
-
-If a plan begins elsewhere, stop and ask rather than creating a second plan.
+The parent runs `record-plan-draft`, waits for editor-reviewed explicit approval, and then runs `save-approved-plan`. Neither command starts work. Only a separate explicit user request starts implementation; the parent runs the registered matching chain and updates completed checklist items and index status from actual evidence. If a plan begins elsewhere, stop and ask rather than creating a second plan.
 
 ### Saved plan chains
 

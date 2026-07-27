@@ -1,0 +1,61 @@
+{
+  "name": "saved-plan-2026_07_25_1758-documentation-revision",
+  "description": "Plan-specific execution chain for docs/prompts/2026_07_25_1758-documentation-revision/README.md. Run only after explicit user approval and plan-index registration.",
+  "chain": [
+    {
+      "agent": "scout",
+      "phase": "Context",
+      "label": "Reconfirm approved scope",
+      "task": "Read the approved canonical plan at docs/prompts/2026_07_25_1758-documentation-revision/README.md, the documentation it names, its factual-source files, and /Users/huaryan/.pi/agent/profiles/pi-subagents/{default,high-effort}.json. Report scope exclusions, factual conflicts, requested profile deltas, and focused validation commands. Do not modify files.",
+      "output": "context.md",
+      "outputMode": "file-only"
+    },
+    {
+      "agent": "technical-writer",
+      "phase": "Implementation",
+      "label": "Revise approved documentation",
+      "task": "Implement only the approved canonical plan at docs/prompts/2026_07_25_1758-documentation-revision/README.md using the context below. You are the sole writer. This is a documentation-only and explicitly approved user-profile configuration exception. Preserve dated plan archives, vendor skills, generated material, runtime artifacts, and all configuration except /Users/huaryan/.pi/agent/profiles/pi-subagents/default.json and /Users/huaryan/.pi/agent/profiles/pi-subagents/high-effort.json. Do not edit the canonical plan or docs/prompts/README.md; the parent alone updates checkboxes and plan-index status from evidence. Run focused validation and stop for any unapproved source, configuration, behavior, or scope change.\n\nContext:\n{previous}",
+      "output": "implementation.md",
+      "outputMode": "file-only",
+      "progress": true
+    },
+    {
+      "parallel": [
+        {
+          "agent": "reviewer",
+          "phase": "Review",
+          "label": "Review facts and scope",
+          "task": "Review the current diff and both user profiles against the approved plan and worker report below. Verify every changed claim against repository configuration/source, both requested profile model/thinking/fallback policies, approved exclusions, and plan-archive integrity. Do not modify project files or user profiles; return only evidence-backed findings with path and line references.\n\nWorker report:\n{previous}",
+          "output": "fact-scope-review.md",
+          "outputMode": "file-only"
+        },
+        {
+          "agent": "reviewer",
+          "phase": "Review",
+          "label": "Review documentation usability",
+          "task": "Review the current diff against the approved plan and the worker report below. Check human/agent usability, concise canonical navigation, Markdown conventions, command preconditions, duplicated lifecycle prose, and changed local links. Do not modify project files; return only evidence-backed findings with path and line references.\n\nWorker report:\n{previous}",
+          "output": "documentation-review.md",
+          "outputMode": "file-only"
+        }
+      ],
+      "concurrency": 2
+    },
+    {
+      "agent": "technical-writer",
+      "phase": "Remediation",
+      "label": "Apply accepted review fixes",
+      "task": "Using the approved plan and the two review reports below, apply only accepted factual or usability fixes, including the approved default and high-effort user-profile configuration deltas. You remain the sole writer. Re-run focused documentation and profile validation, restoring default after high-effort validation unless the user has explicitly chosen otherwise. Do not edit the canonical plan or docs/prompts/README.md, and report deferred findings with rationale.\n\nReview reports:\n{previous}",
+      "output": "remediation.md",
+      "outputMode": "file-only",
+      "progress": true
+    },
+    {
+      "agent": "reviewer",
+      "phase": "Validation",
+      "label": "Validate completion",
+      "task": "Validate the final documentation diff and both user-profile changes against the approved plan and worker reports. Check scope, immutable archives, changed local links, Markdown validation, profile JSON validity, live effective mappings/watchdog status, default-profile restoration, and required completion checks. Do not modify files; report blockers only with evidence.",
+      "output": "validation.md",
+      "outputMode": "file-only"
+    }
+  ]
+}

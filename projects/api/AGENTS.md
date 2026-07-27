@@ -23,12 +23,14 @@ FastAPI service on Python 3.14, managed with uv. Persistence uses async SQLAlche
 
 ## Database and containers
 
-- `DATABASE_URL` defaults to `postgresql+psycopg://postgres:password@localhost:5432/workspace`; Compose uses `postgres` as the host.
+- `DATABASE_URL` defaults to `postgresql+psycopg://postgres:password@localhost:5432/workspace` outside Compose; Compose uses `postgres` as the host.
 - Keep the psycopg3 async URL scheme (`postgresql+psycopg://`).
 - The multi-stage `Dockerfile` produces a non-root Python 3.14 slim runtime image serving uvicorn on port 8000.
 - Add runtime dependencies with `pnpm exec nx run api:add --name=<pkg>` and development dependencies with `--dev` so `pyproject.toml` and `uv.lock` stay synchronized.
 
 ## Commands
+
+Run these commands from the repository root.
 
 ```bash
 pnpm exec nx serve api

@@ -11,7 +11,7 @@ cp .env.example .env             # optional for Compose and api
 pi
 ```
 
-Review and accept Pi's project-trust prompt. It installs the pinned project packages from `.pi/settings.json` into ignored `.pi/npm/`. See [`docs/coding-agent-harness/`](docs/coding-agent-harness/) for setup and provenance.
+Run the commands in this file from the repository root. Review and accept Pi's project-trust prompt. It installs the configured project packages from [`.pi/settings.json`](.pi/settings.json) into ignored `.pi/npm/`. See [`docs/coding-agent-harness/`](docs/coding-agent-harness/) for setup and package provenance.
 
 The `api` and `postgres` projects run through root Docker Compose. Environment variables are documented in [`docs/references/environment-variables.md`](docs/references/environment-variables.md).
 

@@ -9,10 +9,12 @@ This infrastructure project owns the custom PostgreSQL 18 image and first-initia
 - Treat `docker-entrypoint-initdb.d/` scripts as first-init-only; changes do not affect an existing volume.
 - Keep initialization scripts POSIX-shell compatible and fail fast.
 - Do not create extensions in every database unless the approved requirement changes that contract.
-- Never commit real passwords, connection strings, CIDR allowlists, or cloud account secrets.
+- Treat committed Compose credentials as local-development-only; never commit real passwords, connection strings, CIDR allowlists, or cloud account secrets.
 - When environment variables change, update root `.env.example` and `docs/references/environment-variables.md` in the same change.
 
 ## Commands
+
+Run commands from the repository root.
 
 ```bash
 docker compose build postgres

@@ -32,7 +32,7 @@ Local skills are intentionally absent from the lockfile and may be edited in thi
 
 The former local Storybook skill is absent because its testing imports and addon recommendations predate this repository's Storybook 10 setup. Current story conventions live in [`projects/web/AGENTS.md`](../../projects/web/AGENTS.md).
 
-Packages may supply additional versioned skills, such as the `pi-subagents` orchestration skill, web research, or Lens rule authoring. These remain owned by their pinned package and are not copied into `.agents/skills/`.
+Packages may supply additional skills, such as the `pi-subagents` orchestration skill, web research, or Lens rule authoring. These remain owned by their package and are not copied into `.agents/skills/`.
 
 ## Selection rules
 

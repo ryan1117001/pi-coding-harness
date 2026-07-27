@@ -29,6 +29,8 @@ React 19 single-page app built with Vite 8.
 
 ## Tests and stories
 
+Run commands from the repository root.
+
 - Follow RED, GREEN, REFACTOR for behavior changes.
 - Use Vitest and Testing Library; assert rendered behavior and user interactions, not private implementation details.
 - Mock the API client boundary rather than internal component modules.
@@ -37,7 +39,10 @@ React 19 single-page app built with Vite 8.
 
 ## Commands
 
+Install the browsers before running commands that exercise Storybook or E2E: `nx test web` and `nx e2e web-e2e` require them. Run commands from the repository root.
+
 ```bash
+pnpm exec playwright install             # all browsers for web-e2e; Chromium is used by Storybook tests
 pnpm exec nx serve web
 pnpm exec nx build web
 pnpm exec nx test web
@@ -45,5 +50,4 @@ pnpm exec nx typecheck web
 pnpm exec nx lint web
 pnpm exec nx storybook web
 pnpm exec nx e2e web-e2e
-pnpm exec playwright install chromium
 ```

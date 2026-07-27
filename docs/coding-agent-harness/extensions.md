@@ -1,25 +1,26 @@
 # Pi extensions
 
-Pi packages execute with the user's permissions. The exact pins below are the `packages` entries in [`.pi/settings.json`](../../.pi/settings.json); upgrade one package at a time and run the relevant harness checks.
+Pi packages execute with the user's permissions. The package names below are the `packages` entries in [`.pi/settings.json`](../../.pi/settings.json). Effective package versions come from the installed runtime and are not documented here.
 
 ## Package inventory
 
-| Package | Version | Primary surface |
-| --- | --- | --- |
-| [`pi-web-access`](https://github.com/nicobailon/pi-web-access) | 0.13.0 | Web search, source extraction, GitHub inspection, and video/PDF retrieval. |
-| [`pi-readseek`](https://github.com/jarkkojs/readseek) | 0.8.0 | Anchored file reads and edits, structural navigation, and syntax validation. |
-| [`pi-lens`](https://github.com/apmantza/pi-lens) | 3.8.71 | LSP diagnostics, read guards, structural checks, and project analysis. |
-| [`pi-subagents`](https://github.com/nicobailon/pi-subagents) | 0.35.1 | Builtin delegation roles, orchestration, and worktree support. |
-| [`pi-mcp-adapter`](https://github.com/nicobailon/pi-mcp-adapter) | 2.11.0 | Lazy MCP discovery through the shared [`.mcp.json`](../../.mcp.json). |
-| [`pi-intercom`](https://github.com/nicobailon/pi-intercom) | 0.6.0 | Direct messages between related Pi sessions on the same machine. |
-| [`@gotgenes/pi-permission-system`](https://github.com/gotgenes/pi-packages) | 20.10.0 | Permission gates for tools, commands, MCP, skills, and file paths. |
+| Package | Primary surface |
+| --- | --- |
+| `npm:pi-web-access` | Web search, source extraction, GitHub inspection, and video/PDF retrieval. |
+| `npm:pi-readseek` | Anchored file reads and edits, structural navigation, and syntax validation. |
+| `npm:pi-lens` | LSP diagnostics, read guards, structural checks, and project analysis. |
+| `npm:pi-subagents` | Builtin delegation roles, orchestration, and worktree support. |
+| `npm:pi-mcp-adapter` | Lazy MCP discovery through the shared [`.mcp.json`](../../.mcp.json). |
+| `npm:pi-intercom` | Direct messages between related Pi sessions on the same machine. |
+| `npm:@gotgenes/pi-permission-system` | Permission gates for tools, commands, MCP, skills, and file paths. |
+| `npm:@narumitw/pi-retry` | Pi retry extension. |
 
 Package-level licensing, bundled tools, and optional resources can change across releases. Review the package source and loaded runtime surface during an upgrade rather than treating this summary as a complete security inventory.
 
 ## Project configuration
 
 - ReadSeek replaces the standard `read`, `edit`, `write`, and `grep` tool names. Its configured syntax-validation mode is `warn`, not write blocking.
-- The project configures subagent model profiles, but model identifiers and fallbacks remain authoritative only in [`settings.json`](../../.pi/settings.json).
+- User-level Pi profile files under `~/.pi/agent/profiles/pi-subagents/` configure subagent model profiles. Model identifiers and fallbacks are operational settings, not project policy.
 - The project declares one DaisyUI MCP server in [`.mcp.json`](../../.mcp.json) with `directTools: true`. Cached server tools register directly; a first run without cached metadata falls back to the MCP proxy while the cache populates.
 - The permission-system package is installed, but a repository-level permission policy is not declared. User-level policy can affect the runtime decision.
 
@@ -31,6 +32,6 @@ See [configuration.md](configuration.md) for consumers and operational contracts
 2. Install the candidate version in a disposable checkout.
 3. Verify loaded tools, resources, prompts, skills, and effective permission behavior.
 4. Run planning, subagent, MCP, file-tool, and diagnostics smoke checks relevant to the upgrade.
-5. Update the exact pin and this inventory in the same change.
+5. Update the package entry and this inventory in the same change.
 
-Do not run `pi update --extensions` expecting pinned versions to move; pinned npm packages are intentionally skipped.
+Do not treat `pi update --extensions` as a source of project package configuration; the package list remains in [`.pi/settings.json`](../../.pi/settings.json).

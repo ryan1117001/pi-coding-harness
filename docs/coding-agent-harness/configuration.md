@@ -1,10 +1,10 @@
 # Pi configuration
 
-Tracked configuration makes the project harness reproducible. Package installation, effective tools, and runtime behavior are determined by the linked configuration files; do not duplicate generated runtime files under `.pi/npm/`.
+Tracked configuration describes the project package set, effective tools, and runtime boundaries. Pi installs the configured packages under ignored `.pi/npm/`; do not duplicate generated runtime files there.
 
 | File | Consumer | Maintainer action |
 | --- | --- | --- |
-| [`.pi/settings.json`](../../.pi/settings.json) | Pi and installed extensions | Pin packages and configure ReadSeek and subagent defaults. |
+| [`.pi/settings.json`](../../.pi/settings.json) | Pi and installed extensions | List project packages and configure ReadSeek; it does not define subagent role profiles. |
 | [`.pi/chains/`](../../.pi/chains/README.md) | `pi-subagents` | Store reusable generic chains and plan-specific chains in their documented namespaces. |
 | [`.mcp.json`](../../.mcp.json) | MCP adapter | Define shared MCP servers. |
 | [`compose.yml`](../../compose.yml) | Docker Compose | Define local service containers, ports, and Compose-only service wiring. |
@@ -20,7 +20,7 @@ ReadSeek replaces the standard `read`, `edit`, `write`, and `grep` tool names. I
 
 ## Delegation runtime
 
-`settings.json` selects a default subagent model and per-role model/fallback profiles. Those profiles are operational configuration, not workflow policy: inspect the file rather than duplicating model names in documentation. See [delegation.md](delegation.md) for role selection and single-writer rules.
+User-level Pi profile files under `~/.pi/agent/profiles/pi-subagents/` select the default subagent model and per-role model/fallback profiles. Those profiles are operational configuration, not workflow policy: inspect the active profile rather than duplicating model names in documentation. See [delegation.md](delegation.md) for role selection and single-writer rules.
 
 ## Permissions and cross-session work
 

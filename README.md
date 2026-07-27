@@ -1,6 +1,6 @@
 # workspace
 
-**workspace** is an Nx monorepo with a reproducible Pi coding-agent harness. It includes Nx, pnpm, Biome, Vitest, Playwright, Storybook, `@nxlv/python` with uv, project instructions, Agent Skills, delegated agents, planning, diagnostics, web access, and lazy MCP integration.
+**workspace** is an Nx monorepo with a Pi coding-agent harness. It includes Nx, pnpm, Biome, Vitest, Playwright, Storybook, `@nxlv/python` with uv, project instructions, Agent Skills, delegated agents, planning, diagnostics, web access, and lazy MCP integration.
 
 Read [`AGENTS.md`](./AGENTS.md) for workspace policy, [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the repository map, and [`docs/coding-agent-harness/`](docs/coding-agent-harness/) for Pi setup and extension provenance.
 
@@ -8,8 +8,8 @@ Read [`AGENTS.md`](./AGENTS.md) for workspace policy, [`docs/ARCHITECTURE.md`](d
 
 1. Create a repository from the template and clone it.
 2. Run `pnpm install`.
-3. Install Pi 0.80.10 or a compatible newer release and start `pi` at the repository root.
-4. Review and accept Pi's project-trust prompt. Pi installs the exact package versions from [`.pi/settings.json`](.pi/settings.json) into ignored `.pi/npm/`.
+3. Install a compatible Pi release and start `pi` at the repository root.
+4. Review and accept Pi's project-trust prompt. Pi installs the configured project packages from [`.pi/settings.json`](.pi/settings.json) into ignored `.pi/npm/`.
 5. Update the project name in [`package.json`](package.json) and this heading.
 
 ## Quick start

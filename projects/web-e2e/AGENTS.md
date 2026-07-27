@@ -1,6 +1,6 @@
 # Web end-to-end project instructions
 
-Playwright end-to-end tests for the `web` app. Specs live in `src/` and run against `web:preview` at `BASE_URL` (default `http://localhost:4200`).
+Playwright end-to-end tests for the `web` app. Specs live in `src/` and use Playwright's `use.baseURL` (default `http://localhost:4200`); the local `web:preview` server remains at that URL.
 
 ## Conventions
 
@@ -14,8 +14,10 @@ Playwright end-to-end tests for the `web` app. Specs live in `src/` and run agai
 
 ## Commands
 
+Run these commands from the repository root.
+
 ```bash
 pnpm exec playwright install
 pnpm exec nx e2e web-e2e
-BASE_URL=https://example.test pnpm exec nx e2e web-e2e
+BASE_URL=https://example.test pnpm exec nx e2e web-e2e  # changes use.baseURL; webServer.url stays local
 ```

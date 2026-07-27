@@ -7,7 +7,7 @@ Durable design records contain architectural decisions and the rationale behind 
 - Before a project begins communicating with another service over HTTP, a database connection, or an external API.
 - When a change reshapes architecture and future readers need the reasoning.
 
-After approval, update [`../ARCHITECTURE.md`](../ARCHITECTURE.md). Follow [`../standards/documentation.md`](../standards/documentation.md) and the generation rules in [`../references/nx-guidelines.md`](../references/nx-guidelines.md).
+After approval, update [`../ARCHITECTURE.md`](../ARCHITECTURE.md). Follow [`../standards/documentation.md`](../standards/documentation.md).
 
 ## Conventions
 

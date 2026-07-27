@@ -17,6 +17,8 @@ Every router mounts under `/api/v1` (`API_V1_PREFIX`):
 
 ## Quick start
 
+Run the commands below from the repository root. Compose supplies the database host `postgres`; the API's non-Compose default uses `localhost`.
+
 ```bash
 docker compose up -d postgres     # from the repo root — the DB the api talks to
 pnpm exec nx serve api            # uvicorn with --reload on http://localhost:8000
@@ -46,5 +48,5 @@ A multi-stage [`Dockerfile`](Dockerfile) (Python 3.14 slim + uv) builds a non-ro
 runtime image serving uvicorn on port 8000:
 
 ```bash
-docker compose up --build api     # runs api + postgres; DATABASE_URL targets the postgres service
+docker compose up --build api     # runs api + postgres; DATABASE_URL targets the postgres service after its health check
 ```

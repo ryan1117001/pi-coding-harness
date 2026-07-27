@@ -31,3 +31,4 @@ Use `record-plan-draft` to validate a `status: draft` plan and create or retain 
 | Plan | Status | Description |
 | --- | --- | --- |
 | [2026_07_24_1903-replace-plannotator-with-subagent-workflows](2026_07_24_1903-replace-plannotator-with-subagent-workflows/README.md) | ✅ completed | Adopt editor-reviewed Markdown plans and plan-specific pi-subagents chains. |
+| [2026_07_25_1758-documentation-revision](2026_07_25_1758-documentation-revision/README.md) | ✅ completed | Revise active repository-authored documentation for accuracy, concision, and human/agent usability. |

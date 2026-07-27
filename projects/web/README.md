@@ -9,7 +9,10 @@ Translations use Paraglide JS with English message files under [`messages/`](mes
 
 ## Quick start
 
+Run the commands below from the repository root. Storybook browser tests require Chromium; unit tests use jsdom:
+
 ```bash
+pnpm exec playwright install chromium
 pnpm exec nx serve web            # dev server at http://localhost:4200
 ```
 
@@ -25,8 +28,6 @@ pnpm exec nx storybook web        # Storybook dev
 
 Styling is configured CSS-first in `src/styles.css` — there is no `tailwind.config.js`.
 The active theme is `workspace-light`, a custom daisyUI theme (light-only).
-
-Story and browser tests need Playwright's Chromium: `pnpm exec playwright install chromium`.
-End-to-end tests live in [`../web-e2e/`](../web-e2e/).
+The web server listens on port 4200 and has no configured browser-to-API connection. Browser calls to backend or external services follow the boundary in [`AGENTS.md`](AGENTS.md) and [`docs/ARCHITECTURE.md`](../../docs/ARCHITECTURE.md). End-to-end tests live in [`../web-e2e/`](../web-e2e/).
 
 Paraglide message files use the Inlang message format. Run `pnpm exec paraglide-js compile --project projects/web/project.inlang --outdir projects/web/src/paraglide --emit-ts-declarations` when editor types need to be regenerated outside Vite.

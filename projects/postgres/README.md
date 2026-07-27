@@ -22,7 +22,7 @@ docker compose build postgres
 docker compose up -d
 ```
 
-The Compose defaults are:
+The committed Compose defaults are for local development only:
 
 - user: `postgres`
 - password: `password`
@@ -32,7 +32,7 @@ The Compose defaults are:
 
 ## Database
 
-The default database (`workspace` unless overridden by `POSTGRES_DB`) is created by the image entrypoint. [`init-databases.sh`](init-databases.sh) then creates the extra databases listed in `POSTGRES_EXTRA_DATABASES` - a comma- or whitespace-separated list that defaults to an empty string. Set it to an empty string to create none.
+The default database (`workspace` unless overridden by `POSTGRES_DB`) is created by the image entrypoint during first initialization. The `init-databases.sh` script and initialization settings do not affect an existing volume; use `docker compose down -v` only when intentionally resetting disposable local data. [`init-databases.sh`](init-databases.sh) then creates the extra databases listed in `POSTGRES_EXTRA_DATABASES` - a comma- or whitespace-separated list that defaults to an empty string. Set it to an empty string to create none.
 
 Extensions (for example `vector`, `age`) are enabled per database with `CREATE EXTENSION` as needed.
 

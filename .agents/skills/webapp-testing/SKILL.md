@@ -7,7 +7,7 @@ description: Toolkit for interacting with and testing local web applications usi
 
 This skill enables comprehensive testing and debugging of local web applications using Playwright automation.
 
-You should use the Playwright MCP Server to undertake the work if possible. If the MCP Server is unavailable, you can run the code in a local Node.js environment with Playwright installed.
+Use the repository's installed Playwright stack through the relevant Nx target or a local Node.js script. The repository MCP configuration exposes DaisyUI documentation, not a Playwright MCP server.
 
 ## When to Use This Skill
 
@@ -25,7 +25,7 @@ Use this skill when you need to:
 
 - Node.js installed on the system
 - A locally running web application (or accessible URL)
-- Playwright will be installed automatically if not present
+- Install the required Playwright browsers with the project's documented command before running tests
 
 ## Core Capabilities
 
@@ -58,7 +58,7 @@ Use this skill when you need to:
 
 ```javascript
 // Navigate to a page and verify title
-await page.goto("http://localhost:3000");
+await page.goto("http://localhost:4200");
 const title = await page.title();
 console.log("Page title:", title);
 ```
@@ -83,7 +83,7 @@ await page.screenshot({ path: "debug.png", fullPage: true });
 ## Guidelines
 
 1. **Always verify the app is running** - Check that the local server is accessible before running tests
-2. **Use explicit waits** - Wait for elements or navigation to complete before interacting
+2. **Use web-first assertions and locator auto-waiting** - Wait for elements or navigation through Playwright's built-in waiting; do not add arbitrary sleeps
 3. **Capture screenshots on failure** - Take screenshots to help debug issues
 4. **Clean up resources** - Always close the browser when done
 5. **Handle timeouts gracefully** - Set reasonable timeouts for slow operations
@@ -126,8 +126,8 @@ try {
 - Requires Node.js environment
 - Cannot test native mobile apps (use React Native Testing Library instead)
 - May have issues with complex authentication flows
-- Some modern frameworks may require specific configuration
+- Some modern frameworks may require project-specific Playwright configuration
 
 ## Helper Functions
 
-Some helper functions are available in [`test-helper.js`](./assets/test-helper.js) to simplify common tasks like waiting for elements, capturing screenshots, and handling errors. You can import and use these functions in your tests to improve readability and maintainability.
+Optional helper functions are available in [`test-helper.js`](./assets/test-helper.js). Use them only when their behavior matches the test's needs.

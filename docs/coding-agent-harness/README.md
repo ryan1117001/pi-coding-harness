@@ -4,15 +4,15 @@ This repository configures Pi through tracked project files while keeping instal
 
 ## Bootstrap
 
-1. Install Pi 0.80.10 or a compatible newer release.
+1. Install a compatible Pi release.
 2. Clone the repository and run `pnpm install`.
 3. Start `pi` from the repository root.
-4. Review and accept Pi's project-trust prompt. Trust permits `.pi/settings.json`, project resources, and automatic installation of the pinned packages.
+4. Review and accept Pi's project-trust prompt. Trust permits `.pi/settings.json`, project resources, and automatic installation of the configured project packages.
 5. Restart Pi after the initial package installation if a package requests it.
 
 For non-interactive validation, pass `pi --approve`. Do not set a repository-wide global trust default.
 
-Pi installs missing project packages under ignored `.pi/npm/`. A clean checkout is reproducible from `.pi/settings.json`; do not commit `.pi/npm/package.json`, its lockfile, or `node_modules`.
+Pi installs missing project packages listed in `.pi/settings.json` under ignored `.pi/npm/`. Do not commit `.pi/npm/package.json`, its lockfile, or `node_modules`.
 
 ## Tracked surfaces
 
@@ -20,7 +20,8 @@ Pi installs missing project packages under ignored `.pi/npm/`. A clean checkout 
 | --- | --- | --- |
 | Workspace policy | [`AGENTS.md`](../../AGENTS.md) | Cross-workspace change and completion rules |
 | Project policy | `projects/*/AGENTS.md` | Stack, boundaries, commands, and tests |
-| Packages and runtime profiles | [`.pi/settings.json`](../../.pi/settings.json) | Exact package pins, file-tool behavior, and subagent profiles |
+| Packages and file-tool settings | [`.pi/settings.json`](../../.pi/settings.json) | Configured package set and ReadSeek behavior |
+| Subagent profiles | `~/.pi/agent/profiles/pi-subagents/` | User-level model, thinking, fallback, and watchdog settings |
 | Planning | [`docs/prompts/`](../prompts/README.md), [`.pi/prompts/draft-plan.md`](../../.pi/prompts/draft-plan.md), and [`.pi/chains/`](../../.pi/chains/README.md) | Canonical drafts, lifecycle guidance, and saved-chain namespaces |
 | Project agents | [`.pi/agents/`](../../.pi/agents/) | Roles not covered by package builtins |
 | Prompt templates | [`.pi/prompts/`](../../.pi/prompts/) | Unique repeatable repository checks |
