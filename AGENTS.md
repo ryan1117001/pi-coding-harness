@@ -20,6 +20,13 @@
 - Keep browser code behind its own backend boundary. Record every new network dependency or service connection in `docs/ARCHITECTURE.md`; write a design document first when the connection changes architecture.
 - Keep edits narrow. Do not add dependencies, infrastructure, or speculative abstractions without an approved requirement.
 
+## Dev Container agents
+
+- Trusted agents may use the Compose-backed [Dev Container workspace](.devcontainer/README.md) through its headless workflow. It starts `workspace` and `postgres`; run API and web servers with Nx inside `workspace`.
+- Docker-outside-of-Docker grants host-daemon authority. It is not a sandbox for untrusted agents or repository code. Do not persist provider, Git, SSH, or Pi credentials in the image, repository, or named volumes; use ephemeral runner-provided credentials when required.
+- The explicit [host Pi opt-in](.devcontainer/README.md#opt-in-to-user-level-pi-extensions) exposes only read-only user settings and extensions to trusted workspace processes. It never exposes `auth.json`; inspect global settings before opting in and keep provider credentials in the invoked process environment.
+- Host development remains supported. See [`.devcontainer/README.md`](.devcontainer/README.md) for exact commands, browser scope, cache reset, and safe teardown.
+
 ## Agent workflow
 
 1. Read this file, the nearest project `AGENTS.md`, [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), and [`docs/standards/documentation.md`](docs/standards/documentation.md) before editing.

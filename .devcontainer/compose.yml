@@ -1,0 +1,51 @@
+services:
+  workspace:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    init: true
+    command: sleep infinity
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-password}@postgres:5432/${POSTGRES_DB:-workspace}
+      PLAYWRIGHT_BROWSERS_PATH: /home/vscode/.cache/ms-playwright
+      PNPM_STORE_DIR: /home/vscode/.local/share/pnpm/store
+      pnpm_config_store_dir: /home/vscode/.local/share/pnpm/store
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - type: bind
+        source: ${localWorkspaceFolder:-.}
+        target: /workspaces/workspace
+        bind:
+          create_host_path: true
+      - workspace-node-modules:/workspaces/workspace/node_modules
+      - web-node-modules:/workspaces/workspace/projects/web/node_modules
+      - web-e2e-node-modules:/workspaces/workspace/projects/web-e2e/node_modules
+      - api-node-modules:/workspaces/workspace/projects/api/node_modules
+      - postgres-node-modules:/workspaces/workspace/projects/postgres/node_modules
+      - api-venv:/workspaces/workspace/projects/api/.venv
+      - pnpm-store:/home/vscode/.local/share/pnpm/store
+      - uv-cache:/home/vscode/.cache/uv
+      - playwright-browsers:/home/vscode/.cache/ms-playwright
+      - nx-state:/workspaces/workspace/.nx
+      - pi-global-packages:/home/vscode/.pi/agent/npm
+      - pi-global-worktrees:/home/vscode/.pi/agent/git
+      - pi-packages:/workspaces/workspace/.pi/npm
+      - pi-worktrees:/workspaces/workspace/.pi/git
+
+volumes:
+  workspace-node-modules:
+  web-node-modules:
+  web-e2e-node-modules:
+  api-node-modules:
+  postgres-node-modules:
+  api-venv:
+  pnpm-store:
+  uv-cache:
+  playwright-browsers:
+  nx-state:
+  pi-global-packages:
+  pi-global-worktrees:
+  pi-packages:
+  pi-worktrees:

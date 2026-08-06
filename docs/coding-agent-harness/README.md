@@ -14,6 +14,10 @@ For non-interactive validation, pass `pi --approve`. Do not set a repository-wid
 
 Pi installs missing project packages listed in `.pi/settings.json` under ignored `.pi/npm/`. Do not commit `.pi/npm/package.json`, its lockfile, or `node_modules`.
 
+## Dev Container
+
+The optional [Dev Container workspace](../../.devcontainer/README.md) installs the pinned Pi release during its non-interactive setup. It does not start Pi or accept project trust. When a user starts Pi in the container, the same project-trust prompt and [`.pi/settings.json`](../../.pi/settings.json) package configuration apply. The workspace has host-Docker authority and is only for trusted humans and agents; provide credentials ephemerally rather than through project files or persistent Pi state.
+
 ## Tracked surfaces
 
 | Surface | Location | Purpose |

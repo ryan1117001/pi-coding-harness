@@ -1,0 +1,79 @@
+name: Dev Container
+
+on:
+  pull_request:
+    paths:
+      - ".devcontainer/**"
+      - ".dockerignore"
+      - "compose.yml"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "nx.json"
+      - "projects/api/**"
+      - "projects/postgres/**"
+      - "projects/web-e2e/**"
+      - "projects/web/**"
+      - ".github/workflows/devcontainer.yml"
+  push:
+    paths:
+      - ".devcontainer/**"
+      - ".dockerignore"
+      - "compose.yml"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "nx.json"
+      - "projects/api/**"
+      - "projects/postgres/**"
+      - "projects/web-e2e/**"
+      - "projects/web/**"
+      - ".github/workflows/devcontainer.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: Restore pinned Dev Container CLI
+        run: |
+          corepack enable
+          pnpm install --frozen-lockfile
+
+      - name: Validate host Pi opt-in contract
+        run: .devcontainer/test-host-pi.sh
+
+      - name: Resolve configuration
+        run: pnpm exec devcontainer read-configuration --workspace-folder . --include-merged-configuration
+
+      - name: Build with frozen Feature lock
+        run: pnpm exec devcontainer build --workspace-folder . --frozen-lockfile
+
+      - name: Validate host Pi runtime mounts
+        run: .devcontainer/test-host-pi.sh --runtime
+
+      - name: Start Dev Container
+        run: pnpm exec devcontainer up --workspace-folder . --frozen-lockfile
+
+      - name: Run headless smoke test
+        run: pnpm exec devcontainer exec --workspace-folder . bash -lc '.devcontainer/smoke-test.sh'
+
+      - name: Collect Compose diagnostics
+        if: failure()
+        env:
+          localWorkspaceFolder: ${{ github.workspace }}
+        run: docker compose -f compose.yml -f .devcontainer/compose.yml logs --no-color || true
+
+      - name: Tear down Dev Container
+        if: always()
+        env:
+          localWorkspaceFolder: ${{ github.workspace }}
+        run: docker compose -f compose.yml -f .devcontainer/compose.yml down --volumes --remove-orphans || true

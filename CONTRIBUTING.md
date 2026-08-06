@@ -4,6 +4,10 @@ This Nx monorepo uses pnpm. Read [`AGENTS.md`](AGENTS.md), the nearest project `
 
 ## Setup
 
+Run these commands from the repository root.
+
+### Host
+
 ```bash
 pnpm install
 pnpm exec playwright install
@@ -11,9 +15,13 @@ cp .env.example .env             # optional for Compose and api
 pi
 ```
 
-Run the commands in this file from the repository root. Review and accept Pi's project-trust prompt. It installs the configured project packages from [`.pi/settings.json`](.pi/settings.json) into ignored `.pi/npm/`. See [`docs/coding-agent-harness/`](docs/coding-agent-harness/) for setup and package provenance.
+Review and accept Pi's project-trust prompt. It installs the configured project packages from [`.pi/settings.json`](.pi/settings.json) into ignored `.pi/npm/`. See [`docs/coding-agent-harness/`](docs/coding-agent-harness/) for setup and package provenance.
 
 The `api` and `postgres` projects run through root Docker Compose. Environment variables are documented in [`docs/references/environment-variables.md`](docs/references/environment-variables.md).
+
+### Dev Container
+
+The Dev Container is an alternative to the host setup. It starts `workspace` and `postgres`; run API and web servers through Nx in the workspace. It requires trusted users because it can control the host Docker daemon. Follow [`.devcontainer/README.md`](.devcontainer/README.md) for the VS Code and pinned headless workflows, prerequisites, credential boundary, browser scope, cache reset, and teardown.
 
 ## Workflow
 

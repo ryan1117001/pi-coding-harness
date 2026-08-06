@@ -18,7 +18,7 @@ FROM node:24-alpine AS base
 ENV PNPM_HOME="/pnpm" \
     PATH="/pnpm:$PATH"
 # Match the workspace's packageManager pin for reproducible installs.
-RUN corepack enable && corepack prepare pnpm@11.9.0 --activate
+RUN corepack enable && corepack prepare pnpm@11.15.1 --activate
 WORKDIR /workspace
 
 ###############################################################################

@@ -22,11 +22,11 @@ Consumed by the [`postgres`](../../projects/postgres/) image — the official `p
 
 ## api
 
-Consumed by [`api/config.py`](../../projects/api/api/config.py) (pydantic-settings, read once per process; `DATABASE_URL` maps to the `database_url` setting).
+Consumed by [`api/config.py`](../../projects/api/api/config.py) (pydantic-settings, read once per process; `DATABASE_URL` maps to the `database_url` setting). Root Compose and the Dev Container workspace set the value for API processes they start.
 
 | Variable | Default | Description |
-|----------|---------|-------------|
-| `DATABASE_URL` | `postgresql+psycopg://postgres:password@localhost:5432/workspace` | Async SQLAlchemy DSN consumed by `api/config.py`. The driver must be psycopg3's async one (`postgresql+psycopg://`). This documented default is for the API outside Compose; Compose derives the DSN from `POSTGRES_*` and uses `postgres` as the host. |
+| --- | --- | --- |
+| `DATABASE_URL` | `postgresql+psycopg://postgres:password@localhost:5432/workspace` | Async SQLAlchemy DSN consumed by `api/config.py`. The driver must be psycopg3's async one (`postgresql+psycopg://`). This default is for an API outside Compose. Root Compose and [`.devcontainer/compose.yml`](../../.devcontainer/compose.yml) derive the DSN from `POSTGRES_*` and use `postgres` as the host for API processes they start. |
 
 ## Build arguments
 

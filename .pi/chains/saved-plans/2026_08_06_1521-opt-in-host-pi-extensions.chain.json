@@ -1,0 +1,83 @@
+{
+  "name": "saved-plan-2026_08_06_1521-opt-in-host-pi-extensions",
+  "description": "Plan-specific execution chain for docs/prompts/2026_08_06_1521-opt-in-host-pi-extensions/README.md. Run only after explicit user approval and plan-index registration.",
+  "chain": [
+    {
+      "agent": "scout",
+      "phase": "Context",
+      "label": "Confirm approved host Pi integration scope",
+      "task": "Read the approved plan at docs/prompts/2026_08_06_1521-opt-in-host-pi-extensions/README.md, the current Dev Container files, root policies, and Pi 0.83.0 extension/package/provider documentation. Confirm localEnv Compose selection support, current volume topology, the credential boundary, and focused validation commands. Do not modify files. Stop and report any mismatch or security decision that needs user approval.",
+      "output": "context.md",
+      "outputMode": "file-only"
+    },
+    {
+      "agent": "worker",
+      "phase": "Implementation",
+      "label": "Implement opt-in host Pi settings and extensions",
+      "task": "Implement only the approved canonical plan at docs/prompts/2026_08_06_1521-opt-in-host-pi-extensions/README.md using the context below. You are the sole writer for configuration, scripts, tests, and CI in this stage. This is the configuration/documentation TDD exception; add synthetic contract coverage and then implement. Preserve the default host-state-free path. Mount only host extensions and settings read-only when explicitly selected. Structurally inspect settings only to reject the forbidden top-level legacy apiKeys migration field, without printing values. Never mount, copy, inspect, or print auth.json or provider credential values; never mount host npm/git package trees. Keep package installations Linux-native. Do not edit living documentation, the canonical plan, docs/prompts/README.md, or project-level .pi/settings.json. Stop for any unapproved security or architecture decision. Run focused validation and report files, commands, outcomes, and residual risks.\n\nContext:\n{previous}",
+      "output": "implementation.md",
+      "outputMode": "file-only",
+      "progress": true
+    },
+    {
+      "agent": "technical-writer",
+      "phase": "Documentation",
+      "label": "Document trusted host Pi opt-in",
+      "task": "Update only the living documentation required by the approved plan at docs/prompts/2026_08_06_1521-opt-in-host-pi-extensions/README.md. Inspect the actual implementation and worker report first. Document explicit VS Code/headless activation, read-only host settings/extensions, Linux-native global package volumes, environment-only credentials, unsupported OAuth auth sharing, trusted-code implications, compatibility limits, reset, and rollback. Preserve the existing host-Docker authority warning. Do not edit implementation/configuration, the canonical plan, or docs/prompts/README.md. Run focused Markdown/link checks and report changes and residual risks.\n\nImplementation report:\n{previous}",
+      "output": "documentation.md",
+      "outputMode": "file-only",
+      "progress": true
+    },
+    {
+      "parallel": [
+        {
+          "agent": "reviewer",
+          "phase": "Review",
+          "label": "Review credential and host-state security",
+          "task": "Review the current diff against docs/prompts/2026_08_06_1521-opt-in-host-pi-extensions/README.md. Focus on accidental auth/session/trust exposure, legacy apiKeys migration, writable host mounts, settings/extension trust, missing-path creation, secret logging, host npm/git contamination, Docker authority, and rollback. Inspect actual files and tests. Do not modify files. Return evidence-backed blockers and residual risks with file/line references.\n\nLatest report:\n{previous}",
+          "output": "security-review.md",
+          "outputMode": "file-only"
+        },
+        {
+          "agent": "reviewer",
+          "phase": "Review",
+          "label": "Review Dev Container reproducibility",
+          "task": "Review the current diff against docs/prompts/2026_08_06_1521-opt-in-host-pi-extensions/README.md. Focus on VS Code and CLI localEnv selection, default no-op behavior, Compose mount correctness, wrapper quoting/path validation, Linux-native global package volumes, idempotent ownership, CI fixture isolation, and headless compatibility. Inspect actual files and tests. Do not modify files. Return evidence-backed blockers and residual risks with file/line references.\n\nLatest report:\n{previous}",
+          "output": "reproducibility-review.md",
+          "outputMode": "file-only"
+        }
+      ],
+      "concurrency": 2
+    },
+    {
+      "agent": "worker",
+      "phase": "Fixes",
+      "label": "Apply approved review fixes",
+      "task": "Read the current diff, approved plan, and reviewer findings below. You are the sole fix writer. Apply only concrete in-scope correctness or security fixes. Preserve environment-only credentials and the default host-state-free path. Never broaden mounts to auth.json, the complete agent directory, or host npm/git trees. Do not edit the canonical plan or docs/prompts/README.md. Stop for any new decision. Rerun focused tests and report remaining findings and risks.\n\nReviewer findings:\n{previous}",
+      "output": "fixes.md",
+      "outputMode": "file-only",
+      "progress": true
+    },
+    {
+      "parallel": [
+        {
+          "agent": "reviewer",
+          "phase": "Validation",
+          "label": "Validate default and opted-in headless paths",
+          "task": "Validate the final diff against docs/prompts/2026_08_06_1521-opt-in-host-pi-extensions/README.md. Run shell syntax, synthetic host-state contract tests, default and fixture-enabled configuration resolution, fixture-enabled up/runtime mount checks and teardown, frozen default Dev Container build/up/smoke, merged Compose checks, and affected Nx lint/tests through devcontainer exec where available. Verify cleanup and report explicit environment gaps. Do not modify files. Return pass/fail, blockers, and residual risks.\n\nFix report:\n{previous}",
+          "output": "headless-validation.md",
+          "outputMode": "file-only"
+        },
+        {
+          "agent": "reviewer",
+          "phase": "Validation",
+          "label": "Validate security and documentation",
+          "task": "Validate the final diff against docs/prompts/2026_08_06_1521-opt-in-host-pi-extensions/README.md. Confirm no auth or credential mounts/volumes/copies, legacy apiKeys migration is rejected without printing values, no generated fixture state remains, host mounts are exactly read-only, package storage is Linux-native, trust documentation is consistent, links validate, and platform claims are bounded. Do not modify files. Return blockers and residual risks only.\n\nFix report:\n{previous}",
+          "output": "security-documentation-validation.md",
+          "outputMode": "file-only"
+        }
+      ],
+      "concurrency": 2
+    }
+  ]
+}

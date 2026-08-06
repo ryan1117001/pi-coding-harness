@@ -2,10 +2,20 @@
 
 .git
 .nx
+.gitnexus
+.pnpm-store
 .cursor
 .claude
 .agents
 .github
+.pi/npm
+.pi/git
+.pi-subagents
+.pi-tasks
+.npmrc
+/context.md
+/plan.md
+/progress.md
 node_modules
 dist
 coverage
@@ -14,6 +24,7 @@ __pycache__
 .pytest_cache
 .ruff_cache
 .venv
+**/.venv
 .env
 .env.*
 !.env.example

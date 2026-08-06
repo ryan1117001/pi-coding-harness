@@ -17,4 +17,4 @@ After approval, update [`../ARCHITECTURE.md`](../ARCHITECTURE.md). Follow [`../s
 
 ## Contents
 
-_No design documents yet._
+- [0001: Compose-backed Dev Container workspace](0001-devcontainer-workspace.md) — records the development workspace topology and host-Docker trust boundary.

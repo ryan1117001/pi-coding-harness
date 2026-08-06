@@ -1,0 +1,91 @@
+{
+  "name": "saved-plan-2026_08_05_2009-integrate-devcontainers",
+  "description": "Plan-specific execution chain for docs/prompts/2026_08_05_2009-integrate-devcontainers/README.md. Run only after explicit user approval and plan-index registration.",
+  "chain": [
+    {
+      "agent": "scout",
+      "phase": "Context",
+      "label": "Inspect approved Dev Container scope",
+      "task": "Read docs/prompts/2026_08_05_2009-integrate-devcontainers/README.md and every current configuration or documentation file it names. Confirm the approved assumptions, tool/version pins, empty Dev Container baseline, Compose topology, and focused validation commands. Do not modify files. Stop and report any mismatch that requires a user decision.",
+      "output": "context.md",
+      "outputMode": "file-only"
+    },
+    {
+      "agent": "worker",
+      "phase": "Implementation",
+      "label": "Implement the approved Dev Container",
+      "task": "Implement only the approved canonical plan at docs/prompts/2026_08_05_2009-integrate-devcontainers/README.md, using the context below. You are the sole writer for Dev Container, Compose, scripts, workflow, image, and configuration files in this stage. This is the documented configuration/infrastructure TDD exception: capture the missing-definition RED baseline, then implement the headless build and smoke contract. Preserve all security and non-goal constraints, use pinned inputs, never add credentials, and run the narrowest practical validation. Do not edit the canonical plan or docs/prompts/README.md; the parent alone updates plan checkboxes and index status. Stop and report any unapproved product, architecture, security, platform-support, or scope decision. Return changed files, commands with outcomes, validation evidence, residual risks, and decisions needing approval.\n\nContext:\n{previous}",
+      "output": "implementation.md",
+      "outputMode": "file-only",
+      "progress": true
+    },
+    {
+      "agent": "technical-writer",
+      "phase": "Documentation",
+      "label": "Document human and agent workflows",
+      "task": "Update only the living documentation required by the approved plan at docs/prompts/2026_08_05_2009-integrate-devcontainers/README.md. Inspect the actual current implementation and worker report before writing. Document verified editor and headless workflows, configuration ownership, workspace/PostgreSQL topology, Docker host-daemon authority, ephemeral credentials, browser scope, cache reset, and safe teardown. Keep host development supported and avoid claiming sandboxing or unverified platform support. Do not edit implementation/configuration files, the canonical plan, or docs/prompts/README.md. Run focused Markdown/link checks and report changed files and residual documentation risks.\n\nWorker report:\n{previous}",
+      "output": "documentation.md",
+      "outputMode": "file-only",
+      "progress": true
+    },
+    {
+      "parallel": [
+        {
+          "agent": "reviewer",
+          "phase": "Review",
+          "label": "Review Docker and secret security",
+          "task": "Review the current diff against docs/prompts/2026_08_05_2009-integrate-devcontainers/README.md. Focus on host Docker authority, non-root/UID behavior, lifecycle privilege, secret and credential leakage, image/Feature/Action pinning, build context exposure, and unsafe teardown. Inspect files directly. Do not modify project files; return only evidence-backed findings with severity and file/line references. Distinguish blockers from accepted documented trust tradeoffs.\n\nLatest report:\n{previous}",
+          "output": "security-review.md",
+          "outputMode": "file-only"
+        },
+        {
+          "agent": "reviewer",
+          "phase": "Review",
+          "label": "Review reproducibility and headless behavior",
+          "task": "Review the current diff against docs/prompts/2026_08_05_2009-integrate-devcontainers/README.md. Focus on Dev Container and Compose correctness, version/lock authority, cache isolation, idempotent setup, process cleanup, Docker Desktop/native Linux implications, and editor-independent CLI smoke behavior. Inspect files directly. Do not modify project files; return only evidence-backed findings with severity and file/line references.\n\nLatest report:\n{previous}",
+          "output": "reproducibility-review.md",
+          "outputMode": "file-only"
+        },
+        {
+          "agent": "reviewer",
+          "phase": "Review",
+          "label": "Review human and agent usability",
+          "task": "Review the current diff against docs/prompts/2026_08_05_2009-integrate-devcontainers/README.md. Focus on whether a new human and a headless coding-agent runner can follow verified setup, service, browser, credential, cache-reset, and teardown instructions without contradictory documentation or hidden editor assumptions. Inspect files directly and validate changed links. Do not modify project files; return only evidence-backed findings with severity and file/line references.\n\nLatest report:\n{previous}",
+          "output": "usability-review.md",
+          "outputMode": "file-only"
+        }
+      ],
+      "concurrency": 3
+    },
+    {
+      "agent": "worker",
+      "phase": "Fixes",
+      "label": "Apply in-scope review fixes",
+      "task": "Read the current diff, the approved plan at docs/prompts/2026_08_05_2009-integrate-devcontainers/README.md, and the reviewer findings below. You are the sole fix writer. Apply only concrete blocker or correctness fixes that are clearly within the approved decisions and non-goals; preserve intentional documented trust tradeoffs. Do not broaden platform claims, add credentials, or make an unapproved product, architecture, security, or scope choice. Stop and report any finding that needs user or parent synthesis instead of guessing. Do not edit the canonical plan or docs/prompts/README.md. Rerun focused validation and return changed files, commands with outcomes, remaining findings, and residual risks.\n\nReviewer findings:\n{previous}",
+      "output": "fixes.md",
+      "outputMode": "file-only",
+      "progress": true
+    },
+    {
+      "parallel": [
+        {
+          "agent": "reviewer",
+          "phase": "Validation",
+          "label": "Validate headless environment",
+          "task": "Validate the final current diff against docs/prompts/2026_08_05_2009-integrate-devcontainers/README.md and the fix report below. Run the required final checks: Dev Container configuration resolution and frozen-lock headless build/smoke where available, root and merged Compose validation, the post-fix projects/web/Dockerfile dev-image build, and pnpm exec nx affected -t lint test --base=origin/main --parallel=3 through devcontainer exec. Inspect actual outputs and cleanup state; if an environment prevents a required check, report it as an explicit validation gap rather than silently substituting a host-only check. Do not modify files. Report pass/fail, commands observed, blockers, unsupported matrix gaps, and residual risks only.\n\nFix report:\n{previous}",
+          "output": "headless-validation.md",
+          "outputMode": "file-only"
+        },
+        {
+          "agent": "reviewer",
+          "phase": "Validation",
+          "label": "Validate security and documentation",
+          "task": "Validate the final current diff against docs/prompts/2026_08_05_2009-integrate-devcontainers/README.md and the fix report below. Confirm no credentials or generated Pi/subagent state are included, Docker authority is accurately documented, living docs and architecture match behavior, links resolve, and platform/browser claims are bounded by evidence. Do not modify files. Report blockers only, plus any explicit residual risk the parent must disclose.\n\nFix report:\n{previous}",
+          "output": "security-documentation-validation.md",
+          "outputMode": "file-only"
+        }
+      ],
+      "concurrency": 2
+    }
+  ]
+}

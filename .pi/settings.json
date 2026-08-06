@@ -1,22 +1,33 @@
 {
   "packages": [
     "npm:pi-web-access",
-    "npm:pi-readseek",
     "npm:pi-lens",
     "npm:pi-subagents",
     "npm:pi-mcp-adapter",
     "npm:pi-intercom",
     "npm:@gotgenes/pi-permission-system",
-    "npm:@narumitw/pi-retry"
+    "npm:@narumitw/pi-retry",
+    "npm:pi-readseek"
   ],
   "readseek": {
-    "replacedTools": ["read", "edit", "write", "grep"],
+    "overrideTools": [
+      "read",
+      "edit",
+      "write",
+      "grep"
+    ],
     "imageMode": "auto",
     "syntaxValidation": "warn",
     "timeoutMs": 240000,
     "grep": {
       "maxLines": 2000,
       "maxBytes": 51200
+    },
+    "display": {
+      "read": "compact",
+      "grep": "compact",
+      "edit": "expanded",
+      "write": "expanded"
     }
   }
 }

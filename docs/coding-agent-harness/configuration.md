@@ -7,10 +7,15 @@ Tracked configuration describes the project package set, effective tools, and ru
 | [`.pi/settings.json`](../../.pi/settings.json) | Pi and installed extensions | List project packages and configure ReadSeek; it does not define subagent role profiles. |
 | [`.pi/chains/`](../../.pi/chains/README.md) | `pi-subagents` | Store reusable generic chains and plan-specific chains in their documented namespaces. |
 | [`.mcp.json`](../../.mcp.json) | MCP adapter | Define shared MCP servers. |
-| [`compose.yml`](../../compose.yml) | Docker Compose | Define local service containers, ports, and Compose-only service wiring. |
+| [`compose.yml`](../../compose.yml) | Root Docker Compose | Define root service containers, PostgreSQL configuration, ports, and Compose-only application wiring. |
+| [`.devcontainer/devcontainer.json`](../../.devcontainer/devcontainer.json) | VS Code and `@devcontainers/cli` | Select the Compose workspace service, startup set, non-root user, lifecycle setup, and forwarded ports. |
+| [`.devcontainer/compose.yml`](../../.devcontainer/compose.yml) | Docker Compose through the Dev Container definition | Define the workspace bind mount, workspace-run API database DSN, and disposable dependency and cache volumes. |
+| [`.devcontainer/setup.sh`](../../.devcontainer/setup.sh) | Dev Container `postCreateCommand` | Verify tools, install Pi, restore locked dependencies, and provision Chromium; it does not configure credentials or trust. |
 | [`.env.example`](../../.env.example) | Local service operators | Provide safe local override examples. |
 | [`../references/environment-variables.md`](../references/environment-variables.md) | Humans and agents | Explain runtime configuration, consumers, and defaults. |
 | [`.pi/prompts/draft-plan.md`](../../.pi/prompts/draft-plan.md) | Parent agents | Describe the canonical draft, approval, registration, and explicit-execution lifecycle. |
+
+The Dev Container does not own PostgreSQL credentials: root [`compose.yml`](../../compose.yml) and a repo-root `.env` supply `POSTGRES_*`, while its Compose layer derives `DATABASE_URL` for API processes run in `workspace`. See [`.devcontainer/README.md`](../../.devcontainer/README.md) for operation, trust, and cache ownership.
 
 ## File tools
 

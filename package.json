@@ -11,6 +11,7 @@
   "devDependencies": {
     "@berenddeboer/nx-biome": "^1.0.3",
     "@biomejs/biome": "^2.5.4",
+    "@devcontainers/cli": "0.88.0",
     "@inlang/paraglide-js": "^2.22.0",
     "@nx/devkit": "23.0.2",
     "@nx/docker": "23.0.2",

@@ -1,0 +1,43 @@
+{
+  "name": "workspace",
+  "dockerComposeFile": [
+    "../compose.yml",
+    "compose.yml",
+    "${localEnv:PI_DEVCONTAINER_HOST_PI_COMPOSE:compose.host-pi-disabled.yml}"
+  ],
+  "service": "workspace",
+  "runServices": ["workspace", "postgres"],
+  "workspaceFolder": "/workspaces/workspace",
+  "remoteUser": "vscode",
+  "updateRemoteUserUID": true,
+  "shutdownAction": "stopCompose",
+  "forwardPorts": [4200, 8000],
+  "portsAttributes": {
+    "4200": {
+      "label": "Web"
+    },
+    "8000": {
+      "label": "API"
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.14.3",
+      "installTools": false
+    },
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "version": "29.6.1",
+      "moby": false,
+      "dockerDashComposeVersion": "none",
+      "installDockerBuildx": true,
+      "installDockerComposeSwitch": false
+    }
+  },
+  "postCreateCommand": ["bash", ".devcontainer/setup.sh"],
+  "waitFor": "postCreateCommand",
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-playwright.playwright"]
+    }
+  }
+}

@@ -1,0 +1,23 @@
+services:
+  workspace:
+    environment:
+      NODE_EXTRA_CA_CERTS: ${NODE_EXTRA_CA_CERTS:?Copy with-host-pi.example.sh to with-host-pi.sh and run it}
+    volumes:
+      - type: bind
+        source: ${PI_DEVCONTAINER_HOST_PI_DIR:?Copy with-host-pi.example.sh to with-host-pi.sh and run it}/extensions
+        target: /home/vscode/.pi/agent/extensions
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${PI_DEVCONTAINER_HOST_PI_DIR:?Copy with-host-pi.example.sh to with-host-pi.sh and run it}/settings.json
+        target: /home/vscode/.pi/agent/settings.json
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${NODE_EXTRA_CA_CERTS:?Copy with-host-pi.example.sh to with-host-pi.sh and run it}
+        target: ${NODE_EXTRA_CA_CERTS:?Copy with-host-pi.example.sh to with-host-pi.sh and run it}
+        read_only: true
+        bind:
+          create_host_path: false

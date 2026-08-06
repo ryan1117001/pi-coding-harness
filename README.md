@@ -24,6 +24,19 @@ pi
 
 Run `pnpm exec playwright install` instead when executing the cross-browser [`web-e2e`](projects/web-e2e/README.md) suite. To start the local service stack, optionally copy `.env.example` to `.env`, then run `docker compose up --build`; see [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
+## Dev Container quick start
+
+The Dev Container is an optional development path; host development remains supported. With Docker available to VS Code, open this repository and select **Dev Containers: Reopen in Container**. For the pinned headless workflow, cache reset, credentials, browser scope, and teardown, see [`.devcontainer/README.md`](.devcontainer/README.md).
+
+Start it and open an interactive terminal without VS Code:
+
+```bash
+pnpm exec devcontainer up --workspace-folder . --frozen-lockfile
+pnpm exec devcontainer exec --workspace-folder . bash -l
+```
+
+Run `pi` inside that shell, or see [the terminal and Pi workflow](.devcontainer/README.md#interactive-terminal-and-pi) for direct launch and user-level extension opt-in commands.
+
 Scaffold projects with Nx generators, never by hand-writing `project.json`. See [`docs/references/nx-guidelines.md`](docs/references/nx-guidelines.md) and use the `nx-generate` skill.
 
 ## Layout
@@ -45,7 +58,7 @@ Scaffold projects with Nx generators, never by hand-writing `project.json`. See 
 | Need | Read |
 | --- | --- |
 | Set up, contribute, and run checks | [`CONTRIBUTING.md`](CONTRIBUTING.md) |
-| Understand projects, containers, and service connections | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) |
+| Understand projects, containers, workspace topology, and service connections | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) |
 | Find references, plans, decisions, and standards | [`docs/`](docs/) |
 | Configure Pi, skills, agents, and workflows | [`docs/coding-agent-harness/`](docs/coding-agent-harness/) |
 | Follow mandatory agent policy | [`AGENTS.md`](./AGENTS.md) |
