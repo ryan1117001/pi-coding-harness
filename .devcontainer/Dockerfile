@@ -1,18 +1,18 @@
 # Uses the Docker Engine's bundled frontend; no mutable external frontend is selected.
 
-# Multi-architecture manifest digests for uv 0.11.14, Node 24.18.0
+# Multi-architecture manifest digests for uv 0.12.2, Node 24.19.0
 # (bookworm), and the Ubuntu 24.04 Dev Container base.
 
-FROM ghcr.io/astral-sh/uv@sha256:1025398289b62de8269e70c45b91ffa37c373f38118d7da036fb8bb8efc85d97 AS uv
+FROM ghcr.io/astral-sh/uv@sha256:069a51314a7bb6031777a9273205fe1b0b19e914ef418207d1338b268df641dd AS uv
 
-FROM node@sha256:5711a0d445a1af54af9589066c646df387d1831a608226f4cd694fc59e745059 AS node
+FROM node:24.19.0-bookworm@sha256:934240a162082fd8b8a2f90cd5114446443f1eba1c5378f6687167ca405e6584 AS node
 
 FROM mcr.microsoft.com/devcontainers/base@sha256:d94c97dd9cacf183d0a6fd12a8e87b526e9e928307674ae9c94139139c0c6eae
 
 COPY --from=uv /uv /uvx /usr/local/bin/
 COPY --from=node /usr/local/ /usr/local/
 
-RUN corepack enable pnpm && corepack prepare pnpm@11.15.1 --activate
+RUN corepack enable pnpm && corepack prepare pnpm@11.20.0 --activate
 
 ENV UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy \

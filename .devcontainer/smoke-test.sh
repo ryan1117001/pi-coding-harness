@@ -78,10 +78,10 @@ wait_for_url() {
 }
 
 [[ "$(id -u)" -ne 0 ]]
-[[ "$(node --version)" == 'v24.18.0' ]]
-[[ "$(pnpm --version)" == '11.15.1' ]]
-[[ "$(python --version 2>&1)" == 'Python 3.14.3' ]]
-[[ "$(uv --version | cut -d' ' -f1-2)" == 'uv 0.11.14' ]]
+[[ "$(node --version)" == 'v24.19.0' ]]
+[[ "$(pnpm --version)" == '11.20.0' ]]
+[[ "$(python --version 2>&1)" == 'Python 3.14.4' ]]
+[[ "$(uv --version | cut -d' ' -f1-2)" == 'uv 0.12.2' ]]
 [[ "$(pi --version)" == '0.83.0' ]]
 
 [[ -d "$HOME/.pi/agent" && -w "$HOME/.pi/agent" ]]

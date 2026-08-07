@@ -4,6 +4,10 @@
       "type": "http",
       "url": "https://gitmcp.io/saadeghi/daisyui",
       "directTools": true
+    },
+    "nx-mcp": {
+      "command": "pnpm",
+      "args": ["exec", "nx", "mcp"]
     }
   }
 }

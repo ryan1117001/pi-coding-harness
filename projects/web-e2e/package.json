@@ -5,6 +5,29 @@
   "nx": {
     "implicitDependencies": [
       "web"
-    ]
+    ],
+    "targets": {
+      "e2e": {
+        "dependsOn": []
+      },
+      "lint:fix": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "pnpm exec biome check --write projects/web-e2e"
+        }
+      },
+      "format": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "pnpm exec biome format projects/web-e2e"
+        }
+      },
+      "format:fix": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "pnpm exec biome format --write projects/web-e2e"
+        }
+      }
+    }
   }
 }

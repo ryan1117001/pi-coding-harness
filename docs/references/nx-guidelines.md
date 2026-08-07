@@ -6,18 +6,18 @@ Conventions for Nx task names, project scaffolding, and CI integration in this r
 
 For projects that ship **lintable or formattable source** (Python with Ruff, Node/TypeScript with Biome or ESLint, etc.), define these targets so `nx run-many` and CI stay consistent:
 
-| Target | Purpose |
-|--------|---------|
-| `lint` | **Check only** — exit non-zero if fixes are needed. |
-| `lint:fix` | Auto-fix what the linter can fix. |
-| `format` | **Check only** for the formatter. |
-| `format:fix` | Apply formatting. |
+| Target       | Purpose                                             |
+| ------------ | --------------------------------------------------- |
+| `lint`       | **Check only** — exit non-zero if fixes are needed. |
+| `lint:fix`   | Auto-fix what the linter can fix.                   |
+| `format`     | **Check only** for the formatter.                   |
+| `format:fix` | Apply formatting.                                   |
 
 Do **not** use a check-only `format` target to write files in automation: keep **check** vs **write** separate.
 
 ## Infra-only projects
 
-Infrastructure-only projects (Docker Compose services, etc.) may omit application `lint`/`format` targets; they are not source packages in the same sense.
+Infrastructure projects may omit write-oriented format targets. End-to-end projects use the conventional `e2e` target instead of duplicating it as `test`; infrastructure projects add `test` only when they own a meaningful contract test.
 
 ## Verification
 
@@ -26,7 +26,19 @@ Infrastructure-only projects (Docker Compose services, etc.) may omit applicatio
 
 ## Pre-commit
 
-Root `.pre-commit-config.yaml` runs **`nx run-many --targets=lint:fix,format:fix,test`** across all projects. When you add Node/TS or Python apps, make sure they expose those targets so the hook covers them.
+Root `.pre-commit-config.yaml` runs available `lint:fix` and `format:fix` targets, then the meaningful unit/contract tests for `web`, `api`, and `postgres`. End-to-end coverage remains the explicit `web-e2e:e2e` target.
+
+## Coverage and release tooling
+
+After project tests produce Cobertura XML under `coverage/projects/`, run `pnpm coverage:report` to generate the workspace dashboard at `coverage/index.html`. The dashboard links to each available project-level HTML report.
+
+The release pipeline runs `pnpm release` from a clean worktree. [`tools/release.mts`](../../tools/release.mts) uses Nx Release, conventional commits, project metadata, and per-project tags to emit the changed Docker-image matrix through GitHub Actions outputs. Use `pnpm release --dry-run` in a clean checkout to preview version and changelog decisions without writing them; the script refuses dirty worktrees so Nx Release cannot reset unrelated local changes.
+
+## TypeScript toolchain
+
+`@typescript/native` aliases TypeScript 7 and supplies the `tsc` binary used by inferred Nx typecheck/build tasks. The `typescript` package aliases `@typescript/typescript6` so Nx, Vite, and other programmatic compiler consumers retain the TypeScript 6 API; its compatibility compiler is available as `tsc6`.
+
+`@types/node` stays on the Node 24 line because Node 24.19.0 is the supported runtime; a newer type line would describe APIs unavailable in that runtime.
 
 ## Scaffolding new projects
 

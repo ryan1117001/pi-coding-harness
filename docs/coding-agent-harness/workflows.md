@@ -32,7 +32,7 @@ Use [delegation.md](delegation.md) to select a role, choose a workflow, and appl
 
 The repository prompt is `/architecture-check`; use it when frontend boundaries could change. Use `nx-run-tasks` or direct Nx commands for test and lint requests.
 
-The DaisyUI MCP server is declared in [`.mcp.json`](../../.mcp.json) with `directTools: true`. Cached tools are callable directly; the first run without cached metadata uses the MCP proxy while it populates. Use search or describe when the proxy is active or when you need to discover the available surface.
+The shared [`.mcp.json`](../../.mcp.json) declares DaisyUI with `directTools: true` and the workspace-pinned Nx MCP server. Cached DaisyUI tools are callable directly; use the MCP proxy for discovery when direct metadata is unavailable. Use Nx MCP for workspace-aware guidance and the pinned Nx CLI for deterministic commands.
 
 ## Review and completion
 

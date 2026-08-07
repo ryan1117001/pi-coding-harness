@@ -5,7 +5,7 @@
  * Expects Cobertura XML at coverage/projects/<name>/{coverage,cobertura-coverage}.xml
  * — produced by pytest-cov (Python projects) and vitest --coverage (web).
  *
- * Usage: tsx tools/coverage-report.ts
+ * Usage: pnpm coverage:report
  */
 
 import {

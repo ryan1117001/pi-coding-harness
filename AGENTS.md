@@ -6,12 +6,12 @@
 - Use [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the repository map and service topology.
 - Use [`docs/standards/documentation.md`](docs/standards/documentation.md) for documentation conventions.
 
-| Area | Instructions |
-| --- | --- |
-| Web SPA | [`projects/web/AGENTS.md`](projects/web/AGENTS.md) |
-| Web end-to-end tests | [`projects/web-e2e/AGENTS.md`](projects/web-e2e/AGENTS.md) |
-| FastAPI service | [`projects/api/AGENTS.md`](projects/api/AGENTS.md) |
-| PostgreSQL image | [`projects/postgres/AGENTS.md`](projects/postgres/AGENTS.md) |
+| Area                 | Instructions                                                 |
+| -------------------- | ------------------------------------------------------------ |
+| Web SPA              | [`projects/web/AGENTS.md`](projects/web/AGENTS.md)           |
+| Web end-to-end tests | [`projects/web-e2e/AGENTS.md`](projects/web-e2e/AGENTS.md)   |
+| FastAPI service      | [`projects/api/AGENTS.md`](projects/api/AGENTS.md)           |
+| PostgreSQL image     | [`projects/postgres/AGENTS.md`](projects/postgres/AGENTS.md) |
 
 ## Change policy
 
@@ -39,7 +39,7 @@
 ## Nx workflow
 
 - Use Nx generators, with `--dry-run` first, for projects and generated workspace structure. Never hand-write a new `project.json`.
-- Give source projects consistent `lint`, `lint:fix`, `format`, `format:fix`, and `test` targets plus `serve`/`build` where applicable. Verify with `pnpm exec nx show project <name> --json`.
+- Give projects consistent `lint`, `lint:fix`, `format`, and `format:fix` targets when they own lintable/formattable source. Use `test` for unit and contract suites, `e2e` for end-to-end projects, and `serve`/`build` where applicable. Verify with `pnpm exec nx show project <name> --json`.
 - Add a project `README.md` and `AGENTS.md`, then update the root layout and architecture docs.
 
 ## Completion checks
@@ -52,3 +52,27 @@ Before reporting completion:
 4. Run Lens diagnostics for edited source files and resolve new blockers.
 5. Recheck that documentation and `docs/ARCHITECTURE.md` describe the resulting behavior, validate changed links, and involve `technical-writer` when the documentation impact is substantial, cross-file, or user-facing.
 6. Report commands run, outcomes, and any residual risk.
+
+<!-- nx configuration start-->
+<!-- Leave the start & end comments to automatically receive updates. -->
+
+## General Guidelines for working with Nx
+
+- For navigating/exploring the workspace, invoke the `nx-workspace` skill first - it has patterns for querying projects, targets, and dependencies
+- When running tasks (for example build, lint, test, e2e, etc.), always prefer running the task through `nx` (i.e. `nx run`, `nx run-many`, `nx affected`) instead of using the underlying tooling directly
+- Prefix nx commands with the workspace's package manager (e.g., `pnpm nx build`, `npm exec nx test`) - avoids using globally installed CLI
+- You have access to the Nx MCP server and its tools, use them to help the user
+- For Nx plugin best practices, check `node_modules/@nx/<plugin>/PLUGIN.md`. Not all plugins have this file - proceed without it if unavailable.
+- NEVER guess CLI flags - always check nx_docs or `--help` first when unsure
+
+## Scaffolding & Generators
+
+- For scaffolding tasks (creating apps, libs, project structure, setup), ALWAYS invoke the `nx-generate` skill FIRST before exploring or calling MCP tools
+
+## When to use nx_docs
+
+- USE for: advanced config options, unfamiliar flags, migration guides, plugin configuration, edge cases
+- DON'T USE for: basic generator syntax (`nx g @nx/react:app`), standard commands, things you already know
+- The `nx-generate` skill handles generator discovery internally - don't call nx_docs just to look up generator syntax
+
+<!-- nx configuration end-->

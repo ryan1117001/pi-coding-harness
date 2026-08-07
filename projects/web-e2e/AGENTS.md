@@ -12,12 +12,4 @@ Playwright end-to-end tests for the `web` app. Specs live in `src/` and use Play
 - Preserve the Chromium, Firefox, and WebKit projects unless an approved requirement changes browser coverage.
 - Traces remain enabled on first retry; use them before adding diagnostic screenshots or logs.
 
-## Commands
-
-Run these commands from the repository root.
-
-```bash
-pnpm exec playwright install
-pnpm exec nx e2e web-e2e
-BASE_URL=https://example.test pnpm exec nx e2e web-e2e  # changes use.baseURL; webServer.url stays local
-```
+Operational commands and browser prerequisites live in [`README.md`](README.md).

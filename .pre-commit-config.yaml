@@ -27,8 +27,8 @@ repos:
   - repo: local
     hooks:
       - id: nx-run-many
-        name: Nx run-many (lint:fix, format:fix, test)
-        entry: pnpm exec nx run-many --targets=lint:fix,format:fix,test
+        name: Nx format/fix and unit tests
+        entry: bash -c 'pnpm exec nx run-many --targets=lint:fix,format:fix && pnpm exec nx run-many --targets=test --projects=web,api,postgres'
         language: system
         pass_filenames: false
         require_serial: true

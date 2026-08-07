@@ -10,12 +10,7 @@
     "npm:pi-readseek"
   ],
   "readseek": {
-    "overrideTools": [
-      "read",
-      "edit",
-      "write",
-      "grep"
-    ],
+    "overrideTools": ["read", "edit", "write", "grep"],
     "imageMode": "auto",
     "syntaxValidation": "warn",
     "timeoutMs": 240000,

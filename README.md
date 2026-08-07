@@ -16,13 +16,13 @@ Read [`AGENTS.md`](./AGENTS.md) for workspace policy, [`docs/ARCHITECTURE.md`](d
 
 ```bash
 pnpm install
-pnpm exec playwright install chromium  # web unit and Storybook browser tests
-pnpm exec nx run-many -t lint test
-pnpm exec nx graph
+pnpm exec playwright install chromium
+pnpm exec nx run-many -t lint typecheck test build --parallel=3
+pnpm docs:check
 pi
 ```
 
-Run `pnpm exec playwright install` instead when executing the cross-browser [`web-e2e`](projects/web-e2e/README.md) suite. To start the local service stack, optionally copy `.env.example` to `.env`, then run `docker compose up --build`; see [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+Install all Playwright browsers before running the cross-browser [`web-e2e`](projects/web-e2e/README.md) suite. For service startup and contribution checks, use [`CONTRIBUTING.md`](CONTRIBUTING.md). GitHub Actions runs the same quality gates in [`.github/workflows/quality.yml`](.github/workflows/quality.yml).
 
 ## Dev Container quick start
 
@@ -41,24 +41,24 @@ Scaffold projects with Nx generators, never by hand-writing `project.json`. See 
 
 ## Layout
 
-| Path | Purpose |
-| --- | --- |
-| [`projects/web/`](projects/web/) | React 19 + Vite 8 SPA with Tailwind v4, daisyUI v5, TanStack Router, and TanStack Query. |
-| [`projects/web-e2e/`](projects/web-e2e/) | Playwright end-to-end tests for `web`. |
-| [`projects/api/`](projects/api/) | FastAPI service with Python 3.14, uv, pytest, Ruff, async SQLAlchemy, and psycopg3. |
-| [`projects/postgres/`](projects/postgres/) | PostgreSQL 18 image with pgvector and Apache AGE. |
-| [`docs/`](docs/) | Architecture, design decisions, standards, references, approved plans, and coding-agent-harness documentation. |
-| [`.pi/`](.pi/) | Tracked Pi settings, planning profile, project agents, and prompt templates; runtime packages are ignored. |
-| [`.agents/skills/`](.agents/skills/) | Project and vendored Agent Skills, with upstream provenance in [`skills-lock.json`](skills-lock.json). |
-| [`AGENTS.md`](./AGENTS.md) | Workspace policy loaded by Pi; each project has a narrower `AGENTS.md`. |
-| [`tools/`](tools/) | Workspace-level scripts. |
+| Path                                       | Purpose                                                                                                        |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| [`projects/web/`](projects/web/)           | React 19 + Vite 8 SPA with Tailwind v4, daisyUI v5, TanStack Router, and TanStack Query.                       |
+| [`projects/web-e2e/`](projects/web-e2e/)   | Playwright end-to-end tests for `web`.                                                                         |
+| [`projects/api/`](projects/api/)           | FastAPI service with Python 3.14, uv, pytest, Ruff, async SQLAlchemy, and psycopg3.                            |
+| [`projects/postgres/`](projects/postgres/) | PostgreSQL 18 image with pgvector and Apache AGE.                                                              |
+| [`docs/`](docs/)                           | Architecture, design decisions, standards, references, approved plans, and coding-agent-harness documentation. |
+| [`.pi/`](.pi/)                             | Tracked Pi settings, planning profile, project agents, and prompt templates; runtime packages are ignored.     |
+| [`.agents/skills/`](.agents/skills/)       | Project and vendored Agent Skills, with upstream provenance in [`skills-lock.json`](skills-lock.json).         |
+| [`AGENTS.md`](./AGENTS.md)                 | Workspace policy loaded by Pi; each project has a narrower `AGENTS.md`.                                        |
+| [`tools/`](tools/)                         | Workspace-level scripts.                                                                                       |
 
 ## Documentation
 
-| Need | Read |
-| --- | --- |
-| Set up, contribute, and run checks | [`CONTRIBUTING.md`](CONTRIBUTING.md) |
-| Understand projects, containers, workspace topology, and service connections | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) |
-| Find references, plans, decisions, and standards | [`docs/`](docs/) |
-| Configure Pi, skills, agents, and workflows | [`docs/coding-agent-harness/`](docs/coding-agent-harness/) |
-| Follow mandatory agent policy | [`AGENTS.md`](./AGENTS.md) |
+| Need                                                                         | Read                                                       |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| Set up, contribute, and run checks                                           | [`CONTRIBUTING.md`](CONTRIBUTING.md)                       |
+| Understand projects, containers, workspace topology, and service connections | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)             |
+| Find references, plans, decisions, and standards                             | [`docs/`](docs/)                                           |
+| Configure Pi, skills, agents, and workflows                                  | [`docs/coding-agent-harness/`](docs/coding-agent-harness/) |
+| Follow mandatory agent policy                                                | [`AGENTS.md`](./AGENTS.md)                                 |

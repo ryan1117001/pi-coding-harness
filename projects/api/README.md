@@ -5,7 +5,7 @@ Persistence is PostgreSQL via async SQLAlchemy + psycopg3 (the
 [`postgres`](../postgres/) image). Scaffolded with `@nxlv/python:uv-project`;
 linting and formatting via ruff, tests via pytest.
 
-See [`AGENTS.md`](AGENTS.md) for file boundaries, Python conventions, tests, database access, and commands.
+See [`AGENTS.md`](AGENTS.md) for file boundaries, Python conventions, tests, and database-access constraints.
 
 ## Routes
 
@@ -13,7 +13,6 @@ Every router mounts under `/api/v1` (`API_V1_PREFIX`):
 
 - `GET /api/v1/health` — liveness.
 - `GET /api/v1/health/ready` — readiness; probes Postgres and returns 503 if unreachable.
-- `GET /api/v1/status` — service status.
 
 ## Quick start
 
@@ -30,6 +29,8 @@ pnpm exec nx serve api            # uvicorn with --reload on http://localhost:80
 pnpm exec nx test api             # pytest with coverage (fails under 85%)
 pnpm exec nx lint api             # ruff check
 pnpm exec nx format api           # ruff format --check
+pnpm exec nx lint:fix api         # apply Ruff lint fixes
+pnpm exec nx format:fix api       # apply Ruff formatting
 pnpm exec nx build api            # wheel into projects/api/dist
 ```
 

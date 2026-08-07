@@ -21,7 +21,7 @@ Package-level licensing, bundled tools, and optional resources can change across
 
 - ReadSeek replaces the standard `read`, `edit`, `write`, and `grep` tool names. Its configured syntax-validation mode is `warn`, not write blocking.
 - User-level Pi profile files under `~/.pi/agent/profiles/pi-subagents/` configure subagent model profiles. Model identifiers and fallbacks are operational settings, not project policy.
-- The project declares one DaisyUI MCP server in [`.mcp.json`](../../.mcp.json) with `directTools: true`. Cached server tools register directly; a first run without cached metadata falls back to the MCP proxy while the cache populates.
+- [`.mcp.json`](../../.mcp.json) declares DaisyUI with `directTools: true` and the workspace-pinned Nx MCP server. Cached DaisyUI tools register directly; Nx runs through `pnpm exec nx mcp` so missing workspace dependencies fail closed instead of downloading an unpinned package.
 - The permission-system package is installed, but a repository-level permission policy is not declared. User-level policy can affect the runtime decision.
 
 See [configuration.md](configuration.md) for consumers and operational contracts, [delegation.md](delegation.md) for agent workflow, and [skills.md](skills.md) for skill provenance.

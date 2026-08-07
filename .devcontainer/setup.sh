@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-readonly EXPECTED_NODE='v24.18.0'
-readonly EXPECTED_PNPM='11.15.1'
-readonly EXPECTED_PYTHON='Python 3.14.3'
-readonly EXPECTED_UV='uv 0.11.14'
+readonly EXPECTED_NODE='v24.19.0'
+readonly EXPECTED_PNPM='11.20.0'
+readonly EXPECTED_PYTHON='Python 3.14.4'
+readonly EXPECTED_UV='uv 0.12.2'
 readonly EXPECTED_PI='0.83.0'
 readonly PI_PACKAGE='@earendil-works/pi-coding-agent@0.83.0'
 

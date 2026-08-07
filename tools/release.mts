@@ -9,10 +9,10 @@
  * field in project.json (no hardcoded map).
  *
  * Usage:
- *   npx tsx tools/release.mts                  # real run
- *   npx tsx tools/release.mts --dry-run        # preview only
- *   npx tsx tools/release.mts --verbose        # verbose logging
- *   npx tsx tools/release.mts --first-release  # first release (no prior tags)
+ *   pnpm release                  # real run
+ *   pnpm release --dry-run        # preview only
+ *   pnpm release --verbose        # verbose logging
+ *   pnpm release --first-release  # first release (no prior tags)
  */
 
 import { execSync } from 'node:child_process';
@@ -25,6 +25,7 @@ const args = process.argv.slice(2);
 const dryRun = args.includes('--dry-run');
 const verbose = args.includes('--verbose');
 const noVerify = args.includes('--no-verify');
+assertCleanWorktree();
 const firstRelease = args.includes('--first-release') || !hasAnyReleaseTag();
 
 if (firstRelease && !args.includes('--first-release')) {
@@ -106,6 +107,24 @@ for (const p of changed) {
 }
 console.log(`\nBuild matrix: ${JSON.stringify(matrix, null, 2)}`);
 
+function assertCleanWorktree(): void {
+  let status: string;
+  try {
+    status = execSync('git status --porcelain=v1 --untracked-files=all', {
+      encoding: 'utf-8',
+      stdio: ['pipe', 'pipe', 'pipe'],
+    }).trim();
+  } catch (error) {
+    throw new Error('Cannot inspect the release worktree', { cause: error });
+  }
+
+  if (status) {
+    throw new Error(
+      'Release requires a clean worktree. Commit or stash changes before running the release pipeline.',
+    );
+  }
+}
+
 function hasAnyReleaseTag(): boolean {
   try {
     const tag = execSync('git describe --tags --match "*@*" --abbrev=0 HEAD', {
@@ -134,9 +153,14 @@ function writeGitHubOutput(key: string, value: string): void {
  */
 function getNxReleaseAllowlist(): Set<string> | null {
   const nxJsonPath = join(workspaceRoot, 'nx.json');
-  const nxJson = JSON.parse(readFileSync(nxJsonPath, 'utf-8')) as {
-    release?: { projects?: string[] };
-  };
+  let nxJson: { release?: { projects?: string[] } };
+  try {
+    nxJson = JSON.parse(readFileSync(nxJsonPath, 'utf-8')) as typeof nxJson;
+  } catch (error) {
+    throw new Error(`Cannot read release configuration from ${nxJsonPath}`, {
+      cause: error,
+    });
+  }
   const configured = nxJson.release?.projects;
   if (!configured?.length || configured.includes('*')) {
     return null;

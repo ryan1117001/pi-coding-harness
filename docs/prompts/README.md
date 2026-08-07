@@ -28,9 +28,10 @@ Use `record-plan-draft` to validate a `status: draft` plan and create or retain 
 | [2026_01_01_0000-example](2026_01_01_0000-example/README.md) | ⬜ not started | One-line approved outcome. |
 -->
 
-| Plan | Status | Description |
-| --- | --- | --- |
-| [2026_07_24_1903-replace-plannotator-with-subagent-workflows](2026_07_24_1903-replace-plannotator-with-subagent-workflows/README.md) | ✅ completed | Adopt editor-reviewed Markdown plans and plan-specific pi-subagents chains. |
-| [2026_07_25_1758-documentation-revision](2026_07_25_1758-documentation-revision/README.md) | ✅ completed | Revise active repository-authored documentation for accuracy, concision, and human/agent usability. |
-| [2026_08_05_2009-integrate-devcontainers](2026_08_05_2009-integrate-devcontainers/README.md) | ✅ completed | Add a reproducible Compose-backed Dev Container for trusted humans and coding agents. |
-| [2026_08_06_1521-opt-in-host-pi-extensions](2026_08_06_1521-opt-in-host-pi-extensions/README.md) | ✅ completed | Add explicit read-only host Pi extensions and settings to the trusted Dev Container while keeping credentials environment-only. |
+| Plan                                                                                                                                 | Status         | Description                                                                                                                     |
+| ------------------------------------------------------------------------------------------------------------------------------------ | -------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| [2026_07_24_1903-replace-plannotator-with-subagent-workflows](2026_07_24_1903-replace-plannotator-with-subagent-workflows/README.md) | ✅ completed   | Adopt editor-reviewed Markdown plans and plan-specific pi-subagents chains.                                                     |
+| [2026_07_25_1758-documentation-revision](2026_07_25_1758-documentation-revision/README.md)                                           | ✅ completed   | Revise active repository-authored documentation for accuracy, concision, and human/agent usability.                             |
+| [2026_08_05_2009-integrate-devcontainers](2026_08_05_2009-integrate-devcontainers/README.md)                                         | ✅ completed   | Add a reproducible Compose-backed Dev Container for trusted humans and coding agents.                                           |
+| [2026_08_06_1521-opt-in-host-pi-extensions](2026_08_06_1521-opt-in-host-pi-extensions/README.md)                                     | ✅ completed   | Add explicit read-only host Pi extensions and settings to the trusted Dev Container while keeping credentials environment-only. |
+| [2026_08_06_1934-modernize-and-simplify-template](2026_08_06_1934-modernize-and-simplify-template/README.md)                         | ✅ completed   | Upgrade packages with Nx's TypeScript 7/6 setup, repair validation, harden bootstrap code, and simplify documentation.          |

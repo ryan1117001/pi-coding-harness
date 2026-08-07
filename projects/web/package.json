@@ -3,9 +3,26 @@
   "version": "0.0.0",
   "private": true,
   "nx": {
-    "projectType": "application"
-  },
-  "dependencies": {
-    "zustand": "^5.0.14"
+    "projectType": "application",
+    "targets": {
+      "lint:fix": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "pnpm exec biome check --write projects/web"
+        }
+      },
+      "format": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "pnpm exec biome format projects/web"
+        }
+      },
+      "format:fix": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "pnpm exec biome format --write projects/web"
+        }
+      }
+    }
   }
 }

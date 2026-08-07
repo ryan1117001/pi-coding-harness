@@ -4,7 +4,9 @@
     "outDir": "out-tsc/storybook",
     "module": "esnext",
     "moduleResolution": "bundler",
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "lib": ["dom", "dom.iterable", "es2022"],
+    "rootDir": "."
   },
   "exclude": [
     "src/**/*.spec.ts",
@@ -17,6 +19,8 @@
     "src/**/*.test.js"
   ],
   "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
     "src/**/*.stories.ts",
     "src/**/*.stories.js",
     "src/**/*.stories.jsx",
@@ -24,11 +28,6 @@
     "src/**/*.stories.mdx",
     ".storybook/*.js",
     ".storybook/*.ts"
-  ],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    }
   ],
   "files": [
     "../../node_modules/@nx/react/typings/styled-jsx.d.ts",

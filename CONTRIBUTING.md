@@ -8,6 +8,8 @@ Run these commands from the repository root.
 
 ### Host
 
+The complete host validation matrix requires Node.js 24, pnpm 11, Python 3.14, uv 0.12, Docker, and Pi. Use the Dev Container when you do not want to install the full toolchain locally.
+
 ```bash
 pnpm install
 pnpm exec playwright install
@@ -33,20 +35,24 @@ The Dev Container is an alternative to the host setup. It starts `workspace` and
 
 ## Checks before pushing
 
-The pre-commit configuration runs fix and test targets. Run affected checks before opening a pull request:
+The quality workflow and pre-commit hooks use these repository-owned gates:
 
 ```bash
+pnpm exec nx sync:check
+pnpm biome
+pnpm exec nx run-many -t lint typecheck test build --parallel=3
+pnpm docs:check
 pnpm exec nx affected -t lint test --base=origin/main --parallel=3
 ```
 
-Also run focused project tests during development and Lens diagnostics for edited source.
+Install Chromium before `web:test`, and install all browsers before `web-e2e:e2e`. Also run focused project tests during development and Lens diagnostics for edited source.
 
 ## Adding a project
 
 Never hand-write a new `project.json`. Use an Nx generator with `--dry-run` first; see [`docs/references/nx-guidelines.md`](docs/references/nx-guidelines.md).
 
 1. Generate under `projects/` and verify with `pnpm exec nx show project <name> --json`.
-2. Provide consistent source-project targets: `lint`, `lint:fix`, `format`, `format:fix`, and `test`, plus `serve`/`build` where applicable.
+2. Provide check/fix lint and format targets for lintable/formattable source. Use `test` for unit or contract suites and `e2e` for end-to-end projects.
 3. Add `projects/<name>/README.md` and `projects/<name>/AGENTS.md`.
 4. Update the root layout table and [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 5. Write a design document before introducing a new cross-service connection, then record the resulting topology in the architecture document.

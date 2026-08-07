@@ -45,10 +45,6 @@ export default defineConfig(() => ({
     react(),
     tailwindcss(),
   ],
-  // Uncomment this if you are using workers.
-  // worker: {
-  //  plugins: [],
-  // },
   build: {
     outDir: './dist',
     emptyOutDir: true,
@@ -88,6 +84,7 @@ export default defineConfig(() => ({
           watch: false,
           globals: true,
           environment: 'jsdom',
+          setupFiles: ['./tests/setup.ts'],
           include: [
             '{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
           ],

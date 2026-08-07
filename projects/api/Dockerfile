@@ -14,9 +14,9 @@
 ###############################################################################
 # base — pinned toolchain shared by the build stages.
 ###############################################################################
-FROM python:3.14-slim-bookworm AS base
+FROM python:3.14.4-slim-bookworm@sha256:fc74d22ffd0d5ac395a4b7bdda75a4539758862c49ebf3005647084631e63789 AS base
 # Pin uv to the workspace's version for reproducible installs.
-COPY --from=ghcr.io/astral-sh/uv:0.11.14 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv@sha256:069a51314a7bb6031777a9273205fe1b0b19e914ef418207d1338b268df641dd /uv /uvx /bin/
 ENV UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy \
     UV_PYTHON_DOWNLOADS=0
@@ -43,7 +43,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 ###############################################################################
 # runtime — minimal, non-root image. Only the venv and source are carried over.
 ###############################################################################
-FROM python:3.14-slim-bookworm AS runtime
+FROM python:3.14.4-slim-bookworm@sha256:fc74d22ffd0d5ac395a4b7bdda75a4539758862c49ebf3005647084631e63789 AS runtime
 RUN groupadd --system app && useradd --system --gid app --home-dir /app app
 WORKDIR /app
 COPY --from=build --chown=app:app /app /app

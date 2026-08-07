@@ -8,5 +8,13 @@
     "dockerImageName": "postgres",
     "dockerContext": "projects/postgres"
   },
+  "targets": {
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "sh projects/postgres/tests/init-databases.test.sh"
+      }
+    }
+  },
   "tags": ["component:infra", "epic:devops"]
 }

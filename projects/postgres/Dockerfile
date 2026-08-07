@@ -32,7 +32,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         libglib2.0-dev
 
 # --- Apache AGE ---
-ARG AGE_VERSION=PG18/v1.7.0-rc0
+ARG AGE_VERSION=PG18/v1.8.0-rc0
 RUN git clone --depth 1 --branch ${AGE_VERSION} https://github.com/apache/age.git /tmp/age && \
     cd /tmp/age && \
     make && \

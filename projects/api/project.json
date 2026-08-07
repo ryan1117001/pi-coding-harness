@@ -33,9 +33,7 @@
     },
     "build": {
       "executor": "@nxlv/python:build",
-      "outputs": [
-        "{projectRoot}/dist"
-      ],
+      "outputs": ["{projectRoot}/dist"],
       "options": {
         "outputPath": "{projectRoot}/dist",
         "publish": false,
@@ -48,10 +46,7 @@
       "executor": "@nxlv/python:ruff-check",
       "outputs": [],
       "options": {
-        "lintFilePatterns": [
-          "api",
-          "tests"
-        ]
+        "lintFilePatterns": ["api", "tests"]
       },
       "cache": true
     },
@@ -59,10 +54,7 @@
       "executor": "@nxlv/python:ruff-check",
       "outputs": [],
       "options": {
-        "lintFilePatterns": [
-          "api",
-          "tests"
-        ],
+        "lintFilePatterns": ["api", "tests"],
         "fix": true
       },
       "cache": true
@@ -71,10 +63,7 @@
       "executor": "@nxlv/python:ruff-format",
       "outputs": [],
       "options": {
-        "filePatterns": [
-          "api",
-          "tests"
-        ],
+        "filePatterns": ["api", "tests"],
         "check": true
       },
       "cache": true
@@ -83,10 +72,7 @@
       "executor": "@nxlv/python:ruff-format",
       "outputs": [],
       "options": {
-        "filePatterns": [
-          "api",
-          "tests"
-        ]
+        "filePatterns": ["api", "tests"]
       },
       "cache": true
     },
@@ -119,10 +105,7 @@
       }
     }
   },
-  "tags": [
-    "component:backend",
-    "epic:api"
-  ],
+  "tags": ["component:backend", "epic:api"],
   "release": {
     "version": {
       "versionActions": "@nxlv/python/release/version-actions"

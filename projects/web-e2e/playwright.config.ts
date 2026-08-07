@@ -22,10 +22,10 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
   },
-  /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'pnpm exec nx run web:preview',
-    url: 'http://localhost:4200',
+    command:
+      'pnpm exec nx run web:build && pnpm --dir projects/web exec vite preview',
+    url: baseURL,
     reuseExistingServer: true,
     cwd: workspaceRoot,
   },

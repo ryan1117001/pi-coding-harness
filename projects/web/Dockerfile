@@ -14,11 +14,11 @@
 ###############################################################################
 # base — pinned toolchain shared by every downstream stage.
 ###############################################################################
-FROM node:24-alpine AS base
+FROM node:24.19.0-alpine@sha256:d32cdf619f63fe0471182d08996dd516c6275bb5fd31ae06e55a570bd9e1ad43 AS base
 ENV PNPM_HOME="/pnpm" \
     PATH="/pnpm:$PATH"
 # Match the workspace's packageManager pin for reproducible installs.
-RUN corepack enable && corepack prepare pnpm@11.15.1 --activate
+RUN corepack enable && corepack prepare pnpm@11.20.0 --activate
 WORKDIR /workspace
 
 ###############################################################################
@@ -52,7 +52,7 @@ RUN pnpm exec nx run web:build
 # runtime — minimal, non-root static server for the built bundle.
 # nginx-unprivileged runs as uid 101 and listens on 8080.
 ###############################################################################
-FROM nginxinc/nginx-unprivileged:1.27-alpine AS runtime
+FROM nginxinc/nginx-unprivileged:1.30.4-alpine@sha256:44e36330f74d4f3a1d4e222acca9e23b401fb87811a7597024502bb759c4dd49 AS runtime
 COPY projects/web/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /workspace/projects/web/dist /usr/share/nginx/html
 EXPOSE 8080

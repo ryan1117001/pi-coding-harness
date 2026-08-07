@@ -1,0 +1,110 @@
+{
+  "name": "saved-plan-2026_08_06_1934-modernize-and-simplify-template",
+  "description": "Plan-specific execution chain for docs/prompts/2026_08_06_1934-modernize-and-simplify-template/README.md. Run only after explicit user approval and plan-index registration.",
+  "chain": [
+    {
+      "agent": "scout",
+      "phase": "Context",
+      "label": "Reproduce template baseline",
+      "task": "Read the approved plan at docs/prompts/2026_08_06_1934-modernize-and-simplify-template/README.md and inspect the current repository. Reproduce the narrow validation matrix, resolved Nx targets, machine-readable npm and Python dependency currency, tracked documentation scope, and known web/PostgreSQL failures. Do not modify files. Stop if the approved plan no longer matches the repository or if an unapproved architecture decision is required.",
+      "output": "baseline.md",
+      "outputMode": "file-only"
+    },
+    {
+      "agent": "worker",
+      "phase": "Implementation",
+      "label": "Repair web and quality-tooling baseline",
+      "task": "Implement approved plan steps 1 through 3 from docs/prompts/2026_08_06_1934-modernize-and-simplify-template/README.md. You are the sole writer. Use RED, GREEN, REFACTOR for web test and typecheck behavior: prove the route tests and clean project-reference typecheck fail for the expected reason, then fix them with the smallest shared test harness and correct TypeScript references. Migrate and scope Biome, normalize meaningful Nx targets and pre-commit commands, remove duplicate plugin configuration, and correct the invalid JSON example classification. Leave broad dependency upgrades for the next stage except when an owning migration tool requires a tightly coupled change. Do not edit living documentation or the canonical plan, and stop for architecture decisions. Run focused uncached validation and report files, commands, outcomes, generated changes, and residual risks.\n\nBaseline:\n{previous}",
+      "output": "web-tooling.md",
+      "outputMode": "file-only",
+      "progress": true
+    },
+    {
+      "agent": "worker",
+      "phase": "Implementation",
+      "label": "Upgrade packages and adopt TypeScript 7/6 side by side",
+      "task": "Implement approved plan step 4 from docs/prompts/2026_08_06_1934-modernize-and-simplify-template/README.md against the current diff. You are the sole writer. Capture machine-readable npm and Python baselines, then upgrade every direct and development dependency to the latest stable release available at implementation time, including major versions. Follow https://nx.dev/docs/kb/typescript-7 exactly: configure @typescript/native as npm:typescript@^7.0.2 for the TypeScript 7 compiler and typescript as npm:@typescript/typescript6@^6.0.2 for the TypeScript 6 programmatic API, using current compatible patch releases. Verify that pnpm exec tsc --version reports 7.x, pnpm exec tsc6 --version reports 6.x, Nx project discovery succeeds, and inferred build/typecheck targets use the intended compiler. Use Nx and each package owner's migration tooling, update source/configuration/tests for compatibility, regenerate pnpm and uv lockfiles with their owning tools, and validate after each compatibility group. Keep runtime-coupled type packages aligned with the supported runtime; if other latest stable packages are mutually incompatible or require an unapproved runtime/architecture decision, stop with the exact blocker instead of silently retaining an older version. Check package-managed Docker and tool pins, including pnpm, uv, Dev Container CLI, nginx, PostgreSQL extensions, and Apache AGE. Do not edit living documentation or the canonical plan. Return exact before/after versions, migrations, commands, failures, and any remaining outdated or prerelease dependency with its blocker.\n\nPrior report:\n{previous}",
+      "output": "dependencies.md",
+      "outputMode": "file-only",
+      "progress": true
+    },
+    {
+      "agent": "worker",
+      "phase": "Implementation",
+      "label": "Harden backend and remove dead weight",
+      "task": "Implement approved plan steps 5 and 6 from docs/prompts/2026_08_06_1934-modernize-and-simplify-template/README.md. You are the sole writer. Use TDD for PostgreSQL database-name handling, remove raw SQL identifier interpolation, and align the documented shell contract with the implementation. Simplify only backend abstractions proven to add no useful template boundary. Verify tracked callers before removing unused dependencies, tools, placeholders, or ignore patterns. Do not edit living documentation or the canonical plan. Preserve service topology and container security boundaries. Run focused API, shell, Nx, dependency, and container checks; report deletions and residual risks.\n\nPrior report:\n{previous}",
+      "output": "backend-cleanup.md",
+      "outputMode": "file-only",
+      "progress": true
+    },
+    {
+      "agent": "worker",
+      "phase": "CI and agents",
+      "label": "Add quality CI and refresh supported agents",
+      "task": "Implement approved plan steps 8 and 9 from docs/prompts/2026_08_06_1934-modernize-and-simplify-template/README.md. You are the sole writer. Add a least-privilege normal quality workflow that runs the documented frozen install, sync, lint, typecheck, test, build, and documentation checks with only required browser installation. Keep Dev Container CI separate and credential-free. Refresh only intentionally supported Nx AI-agent surfaces and review generated files against canonical AGENTS.md and Pi plan gates; do not weaken or duplicate policy. Do not edit living documentation or the canonical plan. Run syntax and focused workflow checks and report any unsupported Nx-generated surface needing user choice.\n\nPrior report:\n{previous}",
+      "output": "ci-agents.md",
+      "outputMode": "file-only",
+      "progress": true
+    },
+    {
+      "agent": "technical-writer",
+      "phase": "Documentation",
+      "label": "Consolidate template documentation",
+      "task": "Implement approved plan step 7 and the documentation impact from docs/prompts/2026_08_06_1934-modernize-and-simplify-template/README.md. Inspect the actual implementation and reports first. You are the sole documentation writer. Make onboarding short, keep one canonical owner for each fact, remove duplicated command lists, keep AGENTS files constraint-focused, and update versions, targets, CI, architecture, environment, and operational references to match reality. Fix genuine tracked links and scope Markdown/link validation to repository-authored material without rewriting vendored/generated skills or approved plan archives. Do not edit implementation, the canonical plan, or docs/prompts/README.md. Run focused Markdown and local-link checks and report changed files and residual duplication.\n\nImplementation report:\n{previous}",
+      "output": "documentation.md",
+      "outputMode": "file-only",
+      "progress": true
+    },
+    {
+      "parallel": [
+        {
+          "agent": "reviewer",
+          "phase": "Review",
+          "label": "Review correctness, security, and migrations",
+          "task": "Review the complete current diff against docs/prompts/2026_08_06_1934-modernize-and-simplify-template/README.md. Inspect files directly. Focus on web router-test correctness, TypeScript project references, dependency migration compatibility, PostgreSQL identifier safety, container/CI security, generated-file ownership, and regression risk. Do not modify files. Return evidence-backed blockers, fixes worth doing now, and residual risks with file/line references.\n\nLatest report:\n{previous}",
+          "output": "correctness-review.md",
+          "outputMode": "file-only"
+        },
+        {
+          "agent": "reviewer",
+          "phase": "Review",
+          "label": "Review simplicity, targets, and documentation",
+          "task": "Review the complete current diff against docs/prompts/2026_08_06_1934-modernize-and-simplify-template/README.md. Inspect files directly. Focus on unnecessary abstractions, dead dependencies/files, Nx target consistency, command discoverability, documentation duplication, agent instruction clarity, and whether the template is concise without losing required contracts. Do not modify files. Return evidence-backed blockers, fixes worth doing now, and optional improvements separately with file/line references.\n\nLatest report:\n{previous}",
+          "output": "simplicity-review.md",
+          "outputMode": "file-only"
+        }
+      ],
+      "concurrency": 2
+    },
+    {
+      "agent": "worker",
+      "phase": "Fixes",
+      "label": "Apply accepted review fixes",
+      "task": "Read the current diff, approved plan at docs/prompts/2026_08_06_1934-modernize-and-simplify-template/README.md, and both reviewer reports below. You are the sole fix writer. Apply concrete in-scope blockers and fixes worth doing now; do not chase optional polish or introduce an unapproved architecture change, service connection, or new dependency unrelated to the latest-version migrations. Preserve Nx's approved side-by-side TypeScript setup: TypeScript 7 supplies tsc while the aliased TypeScript 6 package supplies the programmatic API and tsc6. Do not silently restore other outdated packages: stop with an exact compatibility blocker when the latest stable set cannot be made green. Preserve generated-file ownership and canonical documentation boundaries. Do not edit the canonical plan or docs/prompts/README.md. Rerun focused checks and report dispositions and residual risks.\n\nReviewer reports:\n{previous}",
+      "output": "fixes.md",
+      "outputMode": "file-only",
+      "progress": true
+    },
+    {
+      "parallel": [
+        {
+          "agent": "reviewer",
+          "phase": "Validation",
+          "label": "Validate code and infrastructure",
+          "task": "Validate the final diff against docs/prompts/2026_08_06_1934-modernize-and-simplify-template/README.md. Run the highest practical code/infrastructure validation: frozen install, Nx sync, uncached lint/typecheck/test/build, PostgreSQL initialization contract tests, Compose rendering, shell syntax, container smoke checks, and dependency checks. Confirm changed code executes. Do not modify files. Return pass/fail, blockers, unavailable checks, and residual risks.\n\nFix report:\n{previous}",
+          "output": "code-validation.md",
+          "outputMode": "file-only"
+        },
+        {
+          "agent": "reviewer",
+          "phase": "Validation",
+          "label": "Validate documentation and template ergonomics",
+          "task": "Validate the final diff against docs/prompts/2026_08_06_1934-modernize-and-simplify-template/README.md. Check repository-authored Markdown, local links, canonical command ownership, version/target claims, quality workflow parity, Nx supported-agent status, and final diff simplicity. Do not modify files. Return blockers, inconsistencies, and residual risks only.\n\nFix report:\n{previous}",
+          "output": "documentation-validation.md",
+          "outputMode": "file-only"
+        }
+      ],
+      "concurrency": 2
+    }
+  ]
+}

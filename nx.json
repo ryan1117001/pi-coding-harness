@@ -1,6 +1,6 @@
 {
   "installation": {
-    "version": "23.0.2"
+    "version": "23.1.1"
   },
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "neverConnectToCloud": true,
@@ -23,12 +23,6 @@
         "typecheckTargetName": "typecheck",
         "buildDepsTargetName": "build-deps",
         "watchDepsTargetName": "watch-deps"
-      }
-    },
-    {
-      "plugin": "@nx/vitest",
-      "options": {
-        "testTargetName": "test"
       }
     },
     {
@@ -73,9 +67,7 @@
     }
   ],
   "release": {
-    "projects": [
-      "projects/*"
-    ],
+    "projects": ["projects/*"],
     "projectsRelationship": "independent",
     "releaseTag": {
       "pattern": "{projectName}@{version}"
@@ -175,9 +167,7 @@
   },
   "targetDefaults": {
     "test": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     }
   }
 }

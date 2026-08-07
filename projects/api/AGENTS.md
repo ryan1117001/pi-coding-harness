@@ -28,18 +28,4 @@ FastAPI service on Python 3.14, managed with uv. Persistence uses async SQLAlche
 - The multi-stage `Dockerfile` produces a non-root Python 3.14 slim runtime image serving uvicorn on port 8000.
 - Add runtime dependencies with `pnpm exec nx run api:add --name=<pkg>` and development dependencies with `--dev` so `pyproject.toml` and `uv.lock` stay synchronized.
 
-## Commands
-
-Run these commands from the repository root.
-
-```bash
-pnpm exec nx serve api
-pnpm exec nx test api
-pnpm exec nx lint api
-pnpm exec nx run api:lint:fix
-pnpm exec nx format api
-pnpm exec nx run api:format:fix
-pnpm exec nx build api
-docker build -f projects/api/Dockerfile --target runtime -t workspace-api projects/api
-docker compose up --build api
-```
+Operational commands live in [`README.md`](README.md). Run them from the repository root.

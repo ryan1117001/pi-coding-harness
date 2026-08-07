@@ -1,12 +1,24 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.8/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.7/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!!**/dist", "!!**/out-tsc"]
+    "includes": [
+      "*.{js,json,jsonc,mjs,mts,ts,tsx}",
+      ".devcontainer/**/*.json",
+      ".github/**/*.{js,json,jsonc,mjs,mts,ts,tsx}",
+      ".pi/settings.json",
+      ".pi/chains/saved-plans/**/*.json",
+      "projects/**/*.{css,js,json,jsonc,jsx,mjs,mts,ts,tsx}",
+      "tools/**/*.{js,jsx,mjs,mts,ts,tsx}",
+      "!!**/dist",
+      "!!**/out-tsc",
+      "!!.github/skills",
+      "!!opencode.json"
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -16,7 +28,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "nursery": {
         "useSortedClasses": {
           "level": "warn",
@@ -55,18 +67,6 @@
     }
   },
   "overrides": [
-    {
-      "includes": [".nx/**"],
-      "linter": { "enabled": false },
-      "formatter": { "enabled": false },
-      "assist": { "enabled": false }
-    },
-    {
-      "includes": [".cursor/**", ".agents/**"],
-      "linter": { "enabled": false },
-      "formatter": { "enabled": false },
-      "assist": { "enabled": false }
-    },
     {
       "includes": ["**/*.gen.ts"],
       "linter": { "enabled": false },
