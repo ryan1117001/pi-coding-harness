@@ -11,11 +11,15 @@ Tracked configuration describes the project package set, effective tools, and ru
 | [`.devcontainer/devcontainer.json`](../../.devcontainer/devcontainer.json) | VS Code and `@devcontainers/cli` | Select the Compose workspace service, startup set, non-root user, lifecycle setup, and forwarded ports. |
 | [`.devcontainer/compose.yml`](../../.devcontainer/compose.yml) | Docker Compose through the Dev Container definition | Define the workspace bind mount, workspace-run API database DSN, and disposable dependency and cache volumes. |
 | [`.devcontainer/setup.sh`](../../.devcontainer/setup.sh) | Dev Container `postCreateCommand` | Verify tools, install Pi, restore locked dependencies, and provision Chromium; it does not configure credentials or trust. |
+| [`tools/toolchain.env`](../../tools/toolchain.env) | Dev Container setup/smoke and Sandbox launcher/bootstrap | Define the single repository-managed authority for the Pi package and every pinned toolchain version. |
 | [`.env.example`](../../.env.example) | Local service operators | Provide safe local override examples. |
 | [`../references/environment-variables.md`](../references/environment-variables.md) | Humans and agents | Explain runtime configuration, consumers, and defaults. |
 | [`.pi/prompts/draft-plan.md`](../../.pi/prompts/draft-plan.md) | Parent agents | Describe the canonical draft, approval, registration, and explicit-execution lifecycle. |
+| [`.sandbox/launch-pi.sh`](../../.sandbox/launch-pi.sh) | Manual Docker Sandbox users | Enforce exact `sbx` 0.38.0, create/attach/remove Sandboxes, select source mode, and configure the optional user Pi input. |
 
 The Dev Container does not own PostgreSQL credentials: root [`compose.yml`](../../compose.yml) and a repo-root `.env` supply `POSTGRES_*`, while its Compose layer derives `DATABASE_URL` for API processes run in `workspace`. See [`.devcontainer/README.md`](../../.devcontainer/README.md) for operation, trust, and cache ownership.
+
+The Sandbox launcher consumes `PI_USER_SETTINGS`, `PI_USER_EXTENSIONS`, `SANDBOX_STATE_ROOT`, `SANDBOX_BOOTSTRAP_NETWORK`, and `SANDBOX_SKIP_BROWSER`; its smoke helper consumes `SANDBOX_LIVE_SMOKE` and `SANDBOX_SMOKE_COMPOSE`. See the [Docker Sandbox Pi reference](../references/docker-sandbox-pi.md) for consumers, defaults, and trust limits.
 
 ## File tools
 

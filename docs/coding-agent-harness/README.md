@@ -18,6 +18,10 @@ Pi installs missing project packages listed in `.pi/settings.json` under ignored
 
 The optional [Dev Container workspace](../../.devcontainer/README.md) installs the pinned Pi release during its non-interactive setup. It does not start Pi or accept project trust. When a user starts Pi in the container, the same project-trust prompt and [`.pi/settings.json`](../../.pi/settings.json) package configuration apply. The workspace has host-Docker authority and is only for trusted humans and agents; provide credentials ephemerally rather than through project files or persistent Pi state.
 
+## Docker Sandbox
+
+The optional [Docker Sandbox Pi runtime](../references/docker-sandbox-pi.md) uses the same repository-managed `@earendil-works/pi-coding-agent@0.84.1` authority as the Dev Container, but it is a separate manual runtime. Its writable Pi state remains in the Sandbox VM. Its optional user settings/extensions input is a trusted read-only snapshot and directory pair, not a host Pi home or authentication share. The exact `sbx` 0.38.0 evidence bounds its lifecycle claims.
+
 ## Tracked surfaces
 
 | Surface | Location | Purpose |
@@ -31,6 +35,7 @@ The optional [Dev Container workspace](../../.devcontainer/README.md) installs t
 | Prompt templates | [`.pi/prompts/`](../../.pi/prompts/) | Unique repeatable repository checks |
 | Skills | [`.agents/skills/`](../../.agents/skills/) | Agent Skills discovered natively by Pi |
 | MCP | [`.mcp.json`](../../.mcp.json) | Shared project MCP endpoints |
+| Pi runtime authority | [`tools/toolchain.env`](../../tools/toolchain.env) | Supplies the exact Pi package and toolchain pins consumed/asserted by Dev Container setup/smoke and the Sandbox launcher/bootstrap. |
 
 ## Documentation
 

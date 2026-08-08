@@ -2,7 +2,7 @@
 
 ## Workspace
 
-Nx monorepo managed with pnpm. Projects live under `projects/` and are scaffolded with Nx generators; never hand-write a new `project.json`. See [`references/nx-guidelines.md`](references/nx-guidelines.md). Tooling includes Biome, Vitest, Playwright, Storybook, and `@nxlv/python` with uv. TypeScript 7 supplies `tsc`, while the aliased TypeScript 6 package supplies the programmatic compiler API required by Nx and Vite. The [quality workflow](../.github/workflows/quality.yml) checks sync, lint, typechecking, tests, builds, and repository-authored documentation without Nx Cloud. Pi project configuration lives under [`.pi/`](../.pi/), Agent Skills under [`.agents/skills/`](../.agents/skills/), and workspace policy in [`AGENTS.md`](../AGENTS.md).
+Nx monorepo managed with pnpm. Projects live under `projects/` and are scaffolded with Nx generators; never hand-write a new `project.json`. See [`references/nx-guidelines.md`](references/nx-guidelines.md). Tooling includes Biome, Vitest, Playwright, Storybook, and `@nxlv/python` with uv. TypeScript 7 supplies `tsc`, while the aliased TypeScript 6 package supplies the programmatic compiler API required by Nx and Vite. The quality gates in [`CONTRIBUTING.md`](../CONTRIBUTING.md) check sync, lint, typechecking, tests, builds, and repository-authored documentation without Nx Cloud; they run locally and in pre-commit hooks, since the template ships no CI workflows. Pi project configuration lives under [`.pi/`](../.pi/), Agent Skills under [`.agents/skills/`](../.agents/skills/), and workspace policy in [`AGENTS.md`](../AGENTS.md).
 
 ## Projects
 
@@ -20,6 +20,12 @@ Nx monorepo managed with pnpm. Projects live under `projects/` and are scaffolde
 The [Dev Container workspace](../.devcontainer/README.md) layers `.devcontainer/compose.yml` after the root Compose file. It starts only a `workspace` development shell and healthy `postgres`; `api` and `web` run through Nx inside `workspace` when needed. The workspace-run API uses the Compose DNS name `postgres`. This is a development connection, not a browser-to-API connection. Docker-outside-of-Docker gives trusted workspace users host-daemon authority; it is not a sandbox.
 
 The default Dev Container does not read host Pi state. Its explicit host Pi opt-in adds read-only bind mounts for the user's global Pi `extensions/` directory, `settings.json` file, and configured CA certificate. The opt-in forwards `NODE_EXTRA_CA_CERTS` so Pi's Node runtime trusts the mounted CA. It does not mount Pi authentication or host package trees. Global package downloads and Git checkouts use container-owned Linux named volumes, separate from project Pi package/worktree volumes. See the [Dev Container guide](../.devcontainer/README.md#opt-in-to-user-level-pi-extensions) for activation and trust limits.
+
+## Docker Sandbox Pi runtime
+
+[Docker Sandboxes](references/docker-sandbox-pi.md) is an optional manual Pi runtime distinct from the Dev Container. `.sandbox/launch-pi.sh` creates an `sbx` 0.38.0 `shell` Sandbox from an invocation-owned standalone clone of repository `HEAD`; `--docker` selects the recorded nested-Docker template. The clone source is a read-only Sandbox mount and the writable agent, package, Git, browser, cache, and session state remains in the VM. Direct mode is an explicit trusted full-checkout read/write mode, not isolation.
+
+The Sandbox has no default outer application/database port publication. The implementation can request ports 8000 and 4200; recorded evidence establishes an ephemeral loopback mapping for port 18080 only. The default path does not establish a Sandbox-to-root-Compose, host-service, or llama.cpp connection. The nested Compose smoke is opt-in and not recorded as a supported connection. See [0002: Optional Docker Sandbox Pi runtime](design-docs/0002-docker-sandbox-pi-runtime.md) for the decision and the [operational reference](references/docker-sandbox-pi.md) for evidence limits.
 
 ```mermaid
 flowchart LR

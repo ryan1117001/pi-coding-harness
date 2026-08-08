@@ -1,4 +1,22 @@
 {
+  "globs": ["**/*.md"],
+  // Repository-authored documentation only, per docs/standards/documentation.md.
+  // Dependency trees, generated output, agent runtime state, and LLM prompt
+  // payloads (agent and skill definitions) are out of scope.
+  "ignores": [
+    "**/node_modules/**",
+    "**/.venv/**",
+    "**/coverage/**",
+    "**/dist/**",
+    ".pi/npm/**",
+    ".pi/git/**",
+    ".pi/agents/**",
+    ".pi/prompts/**",
+    ".pi-subagents/**",
+    ".agents/skills/**",
+    "projects/web/src/paraglide/**",
+    "projects/web/project.inlang/**"
+  ],
   "config": {
     "MD013": false,
     "MD060": false

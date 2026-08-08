@@ -18,3 +18,4 @@ After approval, update [`../ARCHITECTURE.md`](../ARCHITECTURE.md). Follow [`../s
 ## Contents
 
 - [0001: Compose-backed Dev Container workspace](0001-devcontainer-workspace.md) — records the development workspace topology and host-Docker trust boundary.
+- [0002: Optional Docker Sandbox Pi runtime](0002-docker-sandbox-pi-runtime.md) — records the opt-in Sandbox boundary, source clone, trusted Pi input, and evidence limits.

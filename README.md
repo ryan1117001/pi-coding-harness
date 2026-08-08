@@ -10,7 +10,7 @@ Read [`AGENTS.md`](./AGENTS.md) for workspace policy, [`docs/ARCHITECTURE.md`](d
 2. Run `pnpm install`.
 3. Install a compatible Pi release and start `pi` at the repository root.
 4. Review and accept Pi's project-trust prompt. Pi installs the configured project packages from [`.pi/settings.json`](.pi/settings.json) into ignored `.pi/npm/`.
-5. Update the project name in [`package.json`](package.json) and this heading.
+5. Update the project name in [`package.json`](package.json) and this heading. The name `workspace` is the intentional generic container identity used by the Compose project, the Dev Container, `POSTGRES_DB`, and the named volumes; leave it alone unless you also rename all of them together.
 
 ## Quick start
 
@@ -22,7 +22,7 @@ pnpm docs:check
 pi
 ```
 
-Install all Playwright browsers before running the cross-browser [`web-e2e`](projects/web-e2e/README.md) suite. For service startup and contribution checks, use [`CONTRIBUTING.md`](CONTRIBUTING.md). GitHub Actions runs the same quality gates in [`.github/workflows/quality.yml`](.github/workflows/quality.yml).
+Install all Playwright browsers before running the cross-browser [`web-e2e`](projects/web-e2e/README.md) suite. For service startup and contribution checks, use [`CONTRIBUTING.md`](CONTRIBUTING.md). This template ships no CI workflows; run the quality gates locally or add the workflows your fork needs.
 
 ## Dev Container quick start
 
@@ -36,6 +36,10 @@ pnpm exec devcontainer exec --workspace-folder . bash -l
 ```
 
 Run `pi` inside that shell, or see [the terminal and Pi workflow](.devcontainer/README.md#interactive-terminal-and-pi) for direct launch and user-level extension opt-in commands.
+
+## Docker Sandbox Pi runtime
+
+[Docker Sandboxes](docs/references/docker-sandbox-pi.md) is a separate, manual optional Pi runtime. It does not replace host development or the trusted Dev Container. It requires recorded exact `sbx` 0.38.0 evidence and defaults to a validated standalone clone rather than the ordinary checkout. Read the [operational reference](docs/references/docker-sandbox-pi.md) before use.
 
 Scaffold projects with Nx generators, never by hand-writing `project.json`. See [`docs/references/nx-guidelines.md`](docs/references/nx-guidelines.md) and use the `nx-generate` skill.
 

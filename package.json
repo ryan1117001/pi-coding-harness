@@ -8,7 +8,9 @@
     "biome": "biome check",
     "biome:fix": "biome check --write",
     "coverage:report": "tsx tools/coverage-report.ts",
-    "release": "tsx tools/release.mts"
+    "docs:check": "markdownlint-cli2",
+    "release": "tsx tools/release.mts",
+    "sandbox:test": "bash .sandbox/test-contract.sh"
   },
   "devDependencies": {
     "@berenddeboer/nx-biome": "^1.0.3",

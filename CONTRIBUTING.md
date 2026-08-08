@@ -25,6 +25,10 @@ The `api` and `postgres` projects run through root Docker Compose. Environment v
 
 The Dev Container is an alternative to the host setup. It starts `workspace` and `postgres`; run API and web servers through Nx in the workspace. It requires trusted users because it can control the host Docker daemon. Follow [`.devcontainer/README.md`](.devcontainer/README.md) for the VS Code and pinned headless workflows, prerequisites, credential boundary, browser scope, cache reset, and teardown.
 
+### Docker Sandbox Pi runtime
+
+The optional [Docker Sandbox Pi runtime](docs/references/docker-sandbox-pi.md) is separate from host development and the trusted Dev Container. It requires exact `sbx` 0.38.0 and an explicitly authorized host for live smoke. Run `pnpm sandbox:test` for the fake-`sbx` suite; do not run a live Sandbox from generic CI. The reference defines the standalone-clone boundary, trusted direct mode, input opt-in, recovery, and teardown.
+
 ## Workflow
 
 - Follow RED, GREEN, REFACTOR for features, bug fixes, and behavior changes. State when an allowed generated-code, prototype, config, documentation, or formatting exception applies. Use the `test-driven-development` skill for the full mechanics.
@@ -35,7 +39,7 @@ The Dev Container is an alternative to the host setup. It starts `workspace` and
 
 ## Checks before pushing
 
-The quality workflow and pre-commit hooks use these repository-owned gates:
+Pre-commit hooks use these repository-owned gates. The template ships no CI workflows, so run them before pushing:
 
 ```bash
 pnpm exec nx sync:check

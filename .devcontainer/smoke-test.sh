@@ -1,7 +1,19 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+readonly repo_root
+log_prefix='devcontainer smoke'
+source "$repo_root/tools/lib/shell.sh"
+load_toolchain "$repo_root/tools/toolchain.env"
+
+cd "$repo_root"
+
 readonly compose_files=(-f compose.yml -f .devcontainer/compose.yml)
+# Compose renders the workspace bind from localWorkspaceFolder. Inside the
+# container the host path is unknowable, so every invocation here uses the same
+# placeholder and is limited to inspection subcommands.
+readonly compose_workspace_folder='.'
 api_log="$(mktemp)"
 readonly api_log
 web_log="$(mktemp)"
@@ -11,6 +23,10 @@ readonly state_snapshot
 readonly tracked_state=(pnpm-lock.yaml projects/api/uv.lock projects/web/src/routeTree.gen.ts)
 api_pid=''
 web_pid=''
+
+workspace_compose() {
+	localWorkspaceFolder="$compose_workspace_folder" docker compose "${compose_files[@]}" "$@"
+}
 
 stop_process_group() {
 	local pid="$1"
@@ -49,46 +65,28 @@ cleanup() {
 	fi
 	if [[ "$status" -eq 0 ]]; then
 		printf 'Dev Container smoke test passed.\n'
-	fi
-	if [[ "$status" -ne 0 ]]; then
+	else
 		printf '\nAPI log:\n' >&2
 		cat "$api_log" >&2
 		printf '\nWeb log:\n' >&2
 		cat "$web_log" >&2
-		localWorkspaceFolder="$PWD" docker compose "${compose_files[@]}" ps >&2
+		workspace_compose ps >&2
 	fi
 	rm -f "$api_log" "$web_log" "$state_snapshot"
 	exit "$status"
 }
-trap cleanup EXIT
-trap 'exit 130' INT
-trap 'exit 143' TERM
+install_standard_traps
 
-wait_for_url() {
-	local url="$1"
-	local attempts="${2:-60}"
-	for ((attempt = 1; attempt <= attempts; attempt++)); do
-		if curl --fail --silent --show-error "$url" >/dev/null 2>&1; then
-			return 0
-		fi
-		sleep 1
-	done
-	printf 'Timed out waiting for %s\n' "$url" >&2
-	return 1
-}
+[[ "$(id -u)" -ne 0 ]] || fail 'smoke must run as the non-root remote user'
+assert_toolchain
 
-[[ "$(id -u)" -ne 0 ]]
-[[ "$(node --version)" == 'v24.19.0' ]]
-[[ "$(pnpm --version)" == '11.20.0' ]]
-[[ "$(python --version 2>&1)" == 'Python 3.14.4' ]]
-[[ "$(uv --version | cut -d' ' -f1-2)" == 'uv 0.12.2' ]]
-[[ "$(pi --version)" == '0.83.0' ]]
-
-[[ -d "$HOME/.pi/agent" && -w "$HOME/.pi/agent" ]]
+[[ -d "$HOME/.pi/agent" && -w "$HOME/.pi/agent" ]] || fail 'Pi agent root is not writable'
 agent_write_probe="$HOME/.pi/agent/.devcontainer-write-test-$$"
 touch "$agent_write_probe"
 rm -f "$agent_write_probe"
 
+# Each Pi state path must be its own named volume, so nothing leaks between the
+# project and global package/worktree trees.
 readonly pi_state_paths=(
 	"$HOME/.pi/agent/npm"
 	"$HOME/.pi/agent/git"
@@ -97,14 +95,15 @@ readonly pi_state_paths=(
 )
 pi_mount_sources=()
 for state_path in "${pi_state_paths[@]}"; do
-	[[ -d "$state_path" && -w "$state_path" ]]
-	mountpoint --quiet "$state_path"
+	[[ -d "$state_path" && -w "$state_path" ]] || fail "Pi state path is not writable: $state_path"
+	mountpoint --quiet "$state_path" || fail "Pi state path is not a mount: $state_path"
 	write_probe="$state_path/.devcontainer-write-test-$$"
 	touch "$write_probe"
 	rm -f "$write_probe"
 	pi_mount_sources+=("$(findmnt --target "$state_path" --noheadings --output SOURCE)")
 done
-[[ "$(printf '%s\n' "${pi_mount_sources[@]}" | sort -u | wc -l | tr -d ' ')" -eq "${#pi_state_paths[@]}" ]]
+[[ "$(printf '%s\n' "${pi_mount_sources[@]}" | sort -u | wc -l | tr -d ' ')" -eq "${#pi_state_paths[@]}" ]] ||
+	fail 'Pi state paths do not resolve to distinct volumes'
 
 sha256sum "${tracked_state[@]}" >"$state_snapshot"
 
@@ -114,7 +113,7 @@ uv sync --project projects/api --locked
 projects="$(pnpm exec nx show projects)"
 readonly projects
 for project in api postgres web web-e2e; do
-	grep -Fxq "$project" <<<"$projects"
+	grep -Fxq "$project" <<<"$projects" || fail "missing Nx project: $project"
 done
 
 node --input-type=module - <<'NODE'
@@ -124,8 +123,8 @@ await browser.close();
 NODE
 
 docker info >/dev/null
-localWorkspaceFolder="$PWD" docker compose "${compose_files[@]}" config --quiet
-docker compose "${compose_files[@]}" exec -T postgres \
+workspace_compose config --quiet
+workspace_compose exec -T postgres \
 	pg_isready -U "${POSTGRES_USER:-postgres}" -d "${POSTGRES_DB:-workspace}" >/dev/null
 
 setsid bash -lc 'exec pnpm exec nx serve api' >"$api_log" 2>&1 &
@@ -136,6 +135,5 @@ setsid bash -lc 'exec pnpm exec nx serve web' >"$web_log" 2>&1 &
 web_pid=$!
 wait_for_url 'http://localhost:4200/' 90
 
+# Nothing above may rewrite a lockfile or a generated tracked file.
 sha256sum --check "$state_snapshot"
-
-:

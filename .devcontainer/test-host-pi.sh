@@ -3,9 +3,13 @@ set -Eeuo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 readonly repo_root
+log_prefix='host Pi contract test'
+source "$repo_root/tools/lib/shell.sh"
+
 readonly wrapper="$repo_root/.devcontainer/with-host-pi.example.sh"
 readonly enabled_layer="$repo_root/.devcontainer/compose.host-pi.yml"
 readonly disabled_layer_name='compose.host-pi-disabled.yml'
+readonly agent_target='/home/vscode/.pi/agent'
 runtime=false
 runtime_project=''
 tmp_dir="$(mktemp -d)"
@@ -13,31 +17,63 @@ readonly tmp_dir
 readonly fixture_dir="$tmp_dir/agent"
 readonly fixture_ca="$tmp_dir/zscaler-root.pem"
 
-fail() {
-	printf 'host Pi contract test: %s\n' "$*" >&2
-	exit 1
+# Every host Pi compose invocation uses the same three-layer stack and the same
+# fixture environment; only the trailing subcommand differs.
+host_pi_compose() {
+	local -a project=()
+	if [[ -n "$runtime_project" ]]; then
+		project=(--project-name "$runtime_project")
+	fi
+	PI_DEVCONTAINER_HOST_PI_DIR="$fixture_dir" localWorkspaceFolder="$repo_root" \
+		docker compose "${project[@]+"${project[@]}"}" \
+		-f "$repo_root/compose.yml" \
+		-f "$repo_root/.devcontainer/compose.yml" \
+		-f "$enabled_layer" \
+		"$@"
 }
 
+# Assert the rendered service carries exactly one bind for `target`, sourced from
+# `source`, read-only, and never creating a host path.
+assert_exact_ro_bind() {
+	local compose_json="$1"
+	local source="$2"
+	local target="$3"
+	jq -e --arg source "$source" --arg target "$target" '
+    .services.workspace.volumes
+    | any(
+        .type == "bind"
+        and .source == $source
+        and .target == $target
+        and .read_only == true
+        and .bind.create_host_path == false
+      )
+  ' "$compose_json" >/dev/null || fail "bind is not exact and read-only: $target"
+}
+
+# The opted-in bind set must never widen beyond the two approved paths: anything
+# under the host agent directory, or anywhere under the container agent root,
+# has to be exactly the extensions directory or the settings file.
 host_pi_binds_are_exact() {
 	local compose_json="$1"
 	jq -e --arg agent "$fixture_dir" \
 		--arg extensions "$fixture_dir/extensions" \
-		--arg settings "$fixture_dir/settings.json" '
+		--arg settings "$fixture_dir/settings.json" \
+		--arg agent_target "$agent_target" '
     .services.workspace.volumes
     | all(
         if .type == "bind" and (
           ((.source // "") == $agent or ((.source // "") | startswith($agent + "/")))
-          or ((.target // "") == "/home/vscode/.pi/agent" or ((.target // "") | startswith("/home/vscode/.pi/agent/")))
+          or ((.target // "") == $agent_target or ((.target // "") | startswith($agent_target + "/")))
         ) then
           (
             .source == $extensions
-            and .target == "/home/vscode/.pi/agent/extensions"
+            and .target == ($agent_target + "/extensions")
             and .read_only == true
             and .bind.create_host_path == false
           )
           or (
             .source == $settings
-            and .target == "/home/vscode/.pi/agent/settings.json"
+            and .target == ($agent_target + "/settings.json")
             and .read_only == true
             and .bind.create_host_path == false
           )
@@ -46,16 +82,6 @@ host_pi_binds_are_exact() {
         end
       )
   ' "$compose_json" >/dev/null
-}
-
-runtime_compose_down() {
-	local project="$1"
-	PI_DEVCONTAINER_HOST_PI_DIR="$fixture_dir" localWorkspaceFolder="$repo_root" \
-		docker compose --project-name "$project" \
-		-f "$repo_root/compose.yml" \
-		-f "$repo_root/.devcontainer/compose.yml" \
-		-f "$enabled_layer" \
-		down --volumes --remove-orphans --rmi local
 }
 
 runtime_resources_are_absent() {
@@ -72,7 +98,7 @@ cleanup() {
 	trap - EXIT INT TERM
 	set +e
 	if [[ -n "$runtime_project" ]]; then
-		runtime_compose_down "$runtime_project" >/dev/null 2>&1 || cleanup_status=1
+		host_pi_compose down --volumes --remove-orphans --rmi local >/dev/null 2>&1 || cleanup_status=1
 	fi
 	rm -rf "$tmp_dir"
 	if [[ "$status" -eq 0 && "$cleanup_status" -ne 0 ]]; then
@@ -80,9 +106,7 @@ cleanup() {
 	fi
 	exit "$status"
 }
-trap cleanup EXIT
-trap 'exit 130' INT
-trap 'exit 143' TERM
+install_standard_traps
 
 if [[ "${1:-}" == '--runtime' ]]; then
 	runtime=true
@@ -114,56 +138,25 @@ jq -e '.configuration.dockerComposeFile[-1] | endswith("compose.host-pi.yml")' \
 	"$tmp_dir/enabled-configuration.json" >/dev/null ||
 	fail 'wrapped configuration did not select the enabled host Pi layer'
 
-PI_DEVCONTAINER_HOST_PI_DIR="$fixture_dir" localWorkspaceFolder="$repo_root" \
-	docker compose \
-	-f compose.yml \
-	-f .devcontainer/compose.yml \
-	-f "$enabled_layer" \
-	config --format json >"$tmp_dir/enabled-compose.json"
-jq -e --arg source "$fixture_dir/extensions" '
-  .services.workspace.volumes
-  | any(
-      .type == "bind"
-      and .source == $source
-      and .target == "/home/vscode/.pi/agent/extensions"
-      and .read_only == true
-      and .bind.create_host_path == false
-    )
-' "$tmp_dir/enabled-compose.json" >/dev/null || fail 'extensions bind is not exact and read-only'
+host_pi_compose config --format json >"$tmp_dir/enabled-compose.json"
 
-jq -e --arg source "$fixture_dir/settings.json" '
-  .services.workspace.volumes
-  | any(
-      .type == "bind"
-      and .source == $source
-      and .target == "/home/vscode/.pi/agent/settings.json"
-      and .read_only == true
-      and .bind.create_host_path == false
-    )
-' "$tmp_dir/enabled-compose.json" >/dev/null || fail 'settings bind is not exact and read-only'
-
-jq -e --arg certificate "$fixture_ca" '
-  .services.workspace.environment.NODE_EXTRA_CA_CERTS == $certificate
-  and (
-    .services.workspace.volumes
-    | any(
-        .type == "bind"
-        and .source == $certificate
-        and .target == $certificate
-        and .read_only == true
-        and .bind.create_host_path == false
-      )
-  )
-' "$tmp_dir/enabled-compose.json" >/dev/null || fail 'CA certificate environment or bind is incorrect'
+assert_exact_ro_bind "$tmp_dir/enabled-compose.json" "$fixture_dir/extensions" "$agent_target/extensions"
+assert_exact_ro_bind "$tmp_dir/enabled-compose.json" "$fixture_dir/settings.json" "$agent_target/settings.json"
+# The CA certificate is bound at its own host path so NODE_EXTRA_CA_CERTS resolves
+# identically inside and outside the container.
+assert_exact_ro_bind "$tmp_dir/enabled-compose.json" "$fixture_ca" "$fixture_ca"
+jq -e --arg certificate "$fixture_ca" \
+	'.services.workspace.environment.NODE_EXTRA_CA_CERTS == $certificate' \
+	"$tmp_dir/enabled-compose.json" >/dev/null || fail 'CA certificate environment is incorrect'
 
 host_pi_binds_are_exact "$tmp_dir/enabled-compose.json" ||
 	fail 'host Pi bind set is broader than the approved extensions and settings mounts'
 
-jq --arg source "$fixture_dir" '
+jq --arg source "$fixture_dir" --arg target "$agent_target" '
   .services.workspace.volumes += [{
     "type": "bind",
     "source": $source,
-    "target": "/home/vscode/.pi/agent",
+    "target": $target,
     "read_only": true,
     "bind": {"create_host_path": false}
   }]
@@ -173,8 +166,8 @@ if host_pi_binds_are_exact "$tmp_dir/forbidden-agent-bind.json"; then
 fi
 
 for target in \
-	/home/vscode/.pi/agent/npm \
-	/home/vscode/.pi/agent/git \
+	"$agent_target/npm" \
+	"$agent_target/git" \
 	/workspaces/workspace/.pi/npm \
 	/workspaces/workspace/.pi/git; do
 	jq -e --arg target "$target" '
@@ -197,6 +190,7 @@ if PI_DEVCONTAINER_HOST_PI_DIR="$fixture_dir" "$wrapper" true >"$tmp_dir/non-sea
 fi
 chmod 700 "$fixture_dir/extensions"
 
+# Rejections must be actionable without ever echoing a credential value.
 readonly secret_marker='DO_NOT_PRINT_SECRET_MARKER'
 printf '%s\n' "{\"apiKeys\":{\"fixture\":\"$secret_marker\"},\"packages\":[]}" \
 	>"$fixture_dir/settings.json"
@@ -220,27 +214,15 @@ printf '%s\n' '{"packages":[]}' >"$fixture_dir/settings.json"
 
 if [[ "$runtime" == true ]]; then
 	runtime_project="workspace-host-pi-test-$$"
-	PI_DEVCONTAINER_HOST_PI_DIR="$fixture_dir" localWorkspaceFolder="$repo_root" \
-		docker compose --project-name "$runtime_project" \
-		-f compose.yml \
-		-f .devcontainer/compose.yml \
-		-f "$enabled_layer" \
-		up --detach --no-deps workspace >/dev/null
+	host_pi_compose up --detach --no-deps workspace >/dev/null
 
-	container_id="$(
-		PI_DEVCONTAINER_HOST_PI_DIR="$fixture_dir" localWorkspaceFolder="$repo_root" \
-			docker compose --project-name "$runtime_project" \
-			-f compose.yml \
-			-f .devcontainer/compose.yml \
-			-f "$enabled_layer" \
-			ps --quiet workspace
-	)"
+	container_id="$(host_pi_compose ps --quiet workspace)"
 	[[ -n "$container_id" ]] || fail 'runtime workspace container was not created'
 	docker inspect "$container_id" >"$tmp_dir/runtime-inspect.json"
 
 	for pair in \
-		"$fixture_dir/extensions:/home/vscode/.pi/agent/extensions" \
-		"$fixture_dir/settings.json:/home/vscode/.pi/agent/settings.json" \
+		"$fixture_dir/extensions:$agent_target/extensions" \
+		"$fixture_dir/settings.json:$agent_target/settings.json" \
 		"$fixture_ca:$fixture_ca"; do
 		source_path="${pair%%:*}"
 		target_path="${pair#*:}"
@@ -250,12 +232,11 @@ if [[ "$runtime" == true ]]; then
     ' "$tmp_dir/runtime-inspect.json" >/dev/null || fail "runtime bind mismatch: $target_path"
 	done
 
-	jq -e '
-    .[0].Mounts
-    | all(.Destination != "/home/vscode/.pi/agent/auth.json")
-  ' "$tmp_dir/runtime-inspect.json" >/dev/null || fail 'runtime unexpectedly mounted auth.json'
+	jq -e --arg auth "$agent_target/auth.json" \
+		'.[0].Mounts | all(.Destination != $auth)' \
+		"$tmp_dir/runtime-inspect.json" >/dev/null || fail 'runtime unexpectedly mounted auth.json'
 
-	runtime_compose_down "$runtime_project" >/dev/null
+	host_pi_compose down --volumes --remove-orphans --rmi local >/dev/null
 	runtime_resources_are_absent "$runtime_project" || fail 'runtime fixture resources were not fully removed'
 	runtime_project=''
 fi
