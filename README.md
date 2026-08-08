@@ -39,7 +39,7 @@ Run `pi` inside that shell, or see [the terminal and Pi workflow](.devcontainer/
 
 ## Docker Sandbox Pi runtime
 
-[Docker Sandboxes](docs/references/docker-sandbox-pi.md) is a separate, manual optional Pi runtime. It does not replace host development or the trusted Dev Container. It requires recorded exact `sbx` 0.38.0 evidence and defaults to a validated standalone clone rather than the ordinary checkout. Read the [operational reference](docs/references/docker-sandbox-pi.md) before use.
+[Docker Sandboxes](docs/references/docker-sandbox-pi.md) is a separate, manual optional Pi runtime. It does not replace host development or the trusted Dev Container. It requires `sbx` 0.38.0 or newer and defaults to a validated standalone clone of committed `HEAD` rather than the ordinary checkout. Read the [operational reference](docs/references/docker-sandbox-pi.md) before use.
 
 Scaffold projects with Nx generators, never by hand-writing `project.json`. See [`docs/references/nx-guidelines.md`](docs/references/nx-guidelines.md) and use the `nx-generate` skill.
 
@@ -55,7 +55,9 @@ Scaffold projects with Nx generators, never by hand-writing `project.json`. See 
 | [`.pi/`](.pi/)                             | Tracked Pi settings, planning profile, project agents, and prompt templates; runtime packages are ignored.     |
 | [`.agents/skills/`](.agents/skills/)       | Project and vendored Agent Skills, with upstream provenance in [`skills-lock.json`](skills-lock.json).         |
 | [`AGENTS.md`](./AGENTS.md)                 | Workspace policy loaded by Pi; each project has a narrower `AGENTS.md`.                                        |
-| [`tools/`](tools/)                         | Workspace-level scripts.                                                                                       |
+| [`.devcontainer/`](.devcontainer/)         | Optional trusted Dev Container: image, Compose layers, setup, and smoke/contract tests.                       |
+| [`.sandbox/`](.sandbox/)                   | Optional Docker Sandbox Pi runtime: launcher, in-VM bootstrap, and its synthetic and live tests.              |
+| [`tools/`](tools/)                         | Workspace-level scripts, the shared shell library, and [`toolchain.env`](tools/toolchain.env) version pins.   |
 
 ## Documentation
 
