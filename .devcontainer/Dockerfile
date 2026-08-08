@@ -21,8 +21,10 @@ ENV UV_COMPILE_BYTECODE=1 \
     PNPM_HOME=/home/vscode/.local/share/pnpm \
     PATH=/home/vscode/.local/share/pnpm/bin:${PATH}
 
+# jq is for interactive JSON inspection by agents working in the container.
+# Nothing in setup.sh or smoke-test.sh depends on it; test-host-pi.sh uses the
+# host's jq, not this one.
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         jq \
-        netcat-openbsd \
     && rm -rf /var/lib/apt/lists/*

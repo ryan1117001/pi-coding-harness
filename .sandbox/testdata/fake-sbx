@@ -1,0 +1,158 @@
+#!/usr/bin/env bash
+# Synthetic `sbx` for .sandbox/test-contract.sh. Never talks to a daemon.
+#
+# It models the real 0.38.0 interface closely enough that the launcher's
+# fail-closed paths are exercised, and deliberately reproduces two behaviours
+# the launcher must respect:
+#
+#   * `sbx ls --json` echoes extra read-only workspaces back with their `:ro`
+#     suffix, exactly as they were passed to `sbx create`.
+#   * `sbx policy ls` without a SANDBOX argument returns only global rules, so a
+#     nameless call cannot prove a sandbox-scoped rule is absent.
+#
+# Behaviour is steered by FAKE_* environment variables set by the test.
+set -Eeuo pipefail
+
+printf '%q ' "$@" >>"${FAKE_SBX_LOG:?}"
+printf '\n' >>"$FAKE_SBX_LOG"
+root="${FAKE_SBX_STATE:?}"
+
+global_rules_json() {
+	printf '%s' '[{"id":"default-deny-all","resource_type":"network","decision":"deny","resources":["**"],"status":"active","editable":false,"scope":"global"}]'
+}
+
+case "${1:-}" in
+version) printf 'sbx version: v0.38.0 contract\n' ;;
+ls)
+	[[ "${FAKE_INVENTORY_FAIL:-0}" != 1 ]] || exit 91
+	python3 - "$root/sandboxes" <<'PY'
+import json, pathlib, sys
+items = []
+for path in sorted(pathlib.Path(sys.argv[1]).glob("*.json")):
+    items.append(json.loads(path.read_text()))
+print(json.dumps({"sandboxes": items}))
+PY
+	;;
+create)
+	name=''
+	workspaces=()
+	shift 2
+	while (($#)); do
+		case "$1" in
+		--name)
+			name="$2"
+			shift 2
+			;;
+		--template)
+			shift 2
+			;;
+		--clone | --quiet) shift ;;
+		--*) shift ;;
+		# Recorded verbatim, `:ro` suffix included, mirroring real `sbx ls`.
+		*)
+			workspaces+=("$1")
+			shift
+			;;
+		esac
+	done
+	[[ -n "$name" ]]
+	python3 - "$root/sandboxes/$name.json" "$name" "${FAKE_AGENT:-shell}" "${workspaces[@]}" <<'PY'
+import json, pathlib, sys
+out, name, agent, *workspaces = sys.argv[1:]
+pathlib.Path(out).write_text(json.dumps({
+    "name": name, "id": "id-" + name, "agent": agent,
+    "status": "running", "ports": [], "workspaces": workspaces,
+}))
+PY
+	if [[ -n "${FAKE_POLICY_ALLOW:-}" ]]; then printf '%s\n' "$FAKE_POLICY_ALLOW" >"$root/policies/$name.kit"; fi
+	[[ "${FAKE_CREATE_PARTIAL:-0}" != 1 ]] || exit 93
+	;;
+rm)
+	name="${2:?}"
+	[[ "${FAKE_RM_FAIL:-0}" != 1 ]] || exit 94
+	rm -f "$root/sandboxes/$name.json" "$root/policies/$name.kit" "$root/policies/$name.local"
+	;;
+secret)
+	[[ "${2:-}" == ls ]] || exit 95
+	[[ "${FAKE_SECRET_INVENTORY_FAIL:-0}" != 1 ]] || exit 96
+	printf 'SCOPE TYPE NAME SECRET\n'
+	[[ "${FAKE_GLOBAL_REGISTRY:-0}" != 1 ]] || printf '(global) registry registry.example (configured)\n'
+	[[ "${FAKE_GLOBAL_OPENAI:-0}" != 1 ]] || printf '(global) service openai (oauth configured)\n'
+	;;
+policy)
+	case "${2:-}" in
+	ls)
+		# `sbx policy ls [SANDBOX]`: the sandbox name is optional and positional.
+		# Without it, only global rules are visible.
+		if [[ "${3:-}" == --* || -z "${3:-}" ]]; then
+			printf '{"rules":%s}\n' "$(global_rules_json)"
+			exit 0
+		fi
+		name="$3"
+		python3 - "$root/policies/$name.kit" "$root/policies/$name.local" "$name" <<'PY'
+import json, pathlib, sys
+kit, local, name = sys.argv[1:]
+rules = [{"id": "default-deny-all", "resource_type": "network", "decision": "deny",
+          "resources": ["**"], "status": "active", "editable": False}]
+if pathlib.Path(kit).exists():
+    for resource in pathlib.Path(kit).read_text().strip().split(','):
+        if resource:
+            rules.append({"id": "kit-rule", "resource_type": "network", "decision": "allow",
+                          "resources": [resource], "status": "active", "editable": False,
+                          "scope": "sandbox:" + name})
+if pathlib.Path(local).exists():
+    for line in pathlib.Path(local).read_text().splitlines():
+        if line:
+            rule_id, resource = line.split(' ', 1)
+            rules.append({"id": rule_id, "resource_type": "network", "decision": "allow",
+                          "resources": [resource], "status": "active", "editable": True,
+                          "scope": "sandbox:" + name})
+print(json.dumps({"rules": rules}))
+PY
+		;;
+	allow)
+		name="${5:?}"
+		resource="${6:?}"
+		counter_file="$root/counter"
+		counter=0
+		[[ ! -f "$counter_file" ]] || counter="$(cat "$counter_file")"
+		counter=$((counter + 1))
+		printf '%s\n' "$counter" >"$counter_file"
+		id="00000000-0000-0000-0000-$(printf '%012d' "$counter")"
+		printf '%s %s\n' "$id" "$resource" >>"$root/policies/$name.local"
+		printf 'Rule added: %s\n' "$id"
+		;;
+	check)
+		name="${5:?}"
+		target="${6:?}"
+		allowed=0
+		if [[ -f "$root/policies/$name.kit" ]]; then
+			IFS=',' read -r -a rules <"$root/policies/$name.kit"
+			for resource in "${rules[@]}"; do
+				[[ "$target" == "$resource" || ("$resource" != *:* && "$target" == "$resource:443") ]] && allowed=1
+			done
+		fi
+		if [[ -f "$root/policies/$name.local" ]]; then
+			while read -r id resource; do [[ "$target" == "$resource" ]] && allowed=1; done <"$root/policies/$name.local"
+		fi
+		printf '{"allowed":%s}\n' "$([[ "$allowed" -eq 1 ]] && echo true || echo false)"
+		[[ "$allowed" -eq 1 ]]
+		;;
+	rm)
+		name="${5:?}"
+		id="${7:?}"
+		[[ "${FAKE_POLICY_RM_FAIL:-0}" != 1 ]] || exit 97
+		python3 - "$root/policies/$name.local" "$id" <<'PY'
+import pathlib, sys
+path = pathlib.Path(sys.argv[1])
+wanted = sys.argv[2]
+if path.exists():
+    kept = [x for x in path.read_text().splitlines() if not x.startswith(wanted + " ")]
+    path.write_text("\n".join(kept) + ("\n" if kept else ""))
+PY
+		;;
+	esac
+	;;
+ports) printf '[]\n' ;;
+exec | run | cp) : ;;
+esac

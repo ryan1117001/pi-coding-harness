@@ -26,6 +26,7 @@
 - Docker-outside-of-Docker grants host-daemon authority. It is not a sandbox for untrusted agents or repository code. Do not persist provider, Git, SSH, or Pi credentials in the image, repository, or named volumes; use ephemeral runner-provided credentials when required.
 - The explicit [host Pi opt-in](.devcontainer/README.md#opt-in-to-user-level-pi-extensions) exposes only read-only user settings and extensions to trusted workspace processes. It never exposes `auth.json`; inspect global settings before opting in and keep provider credentials in the invoked process environment.
 - Host development remains supported. See [`.devcontainer/README.md`](.devcontainer/README.md) for exact commands, browser scope, cache reset, and safe teardown.
+- [Docker Sandbox Pi](docs/references/docker-sandbox-pi.md) is a separate optional manual runtime. It requires exact `sbx` 0.38.0 and authorized live smoke; generic CI runs only `pnpm sandbox:test`. It does not make the Dev Container or ordinary checkout isolated.
 
 ## Agent workflow
 

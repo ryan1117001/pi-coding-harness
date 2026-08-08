@@ -1,24 +1,13 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-readonly EXPECTED_NODE='v24.19.0'
-readonly EXPECTED_PNPM='11.20.0'
-readonly EXPECTED_PYTHON='Python 3.14.4'
-readonly EXPECTED_UV='uv 0.12.2'
-readonly EXPECTED_PI='0.83.0'
-readonly PI_PACKAGE='@earendil-works/pi-coding-agent@0.83.0'
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+readonly repo_root
+log_prefix='devcontainer setup'
+source "$repo_root/tools/lib/shell.sh"
+load_toolchain "$repo_root/tools/toolchain.env"
 
-fail() {
-	printf 'devcontainer setup: %s\n' "$*" >&2
-	exit 1
-}
-
-assert_version() {
-	local label="$1"
-	local expected="$2"
-	local actual="$3"
-	[[ "$actual" == "$expected" ]] || fail "$label version mismatch: expected '$expected', found '$actual'"
-}
+cd "$repo_root"
 
 [[ "$(id -u)" -ne 0 ]] || fail 'setup must run as the non-root remote user'
 
@@ -26,6 +15,8 @@ assert_version Node "$EXPECTED_NODE" "$(node --version)"
 assert_version Python "$EXPECTED_PYTHON" "$(python --version 2>&1)"
 assert_version uv "$EXPECTED_UV" "$(uv --version | cut -d' ' -f1-2)"
 
+# The agent root and its parent are created but not recursed into: opted-in host
+# settings and extensions arrive as read-only binds underneath them.
 readonly pi_agent_parent_paths=(
 	"$HOME/.pi"
 	"$HOME/.pi/agent"
@@ -52,9 +43,10 @@ readonly volume_paths=(
 )
 
 sudo mkdir -p "${pi_agent_parent_paths[@]}" "${volume_paths[@]}"
-# Do not recurse through the agent root: opted-in host settings and extensions are read-only binds.
 sudo chown "$(id -u):$(id -g)" "${pi_agent_parent_paths[@]}"
 sudo chown -R "$(id -u):$(id -g)" "${volume_paths[@]}"
+
+# pnpm is asserted only after the chown above creates its writable home.
 assert_version pnpm "$EXPECTED_PNPM" "$(pnpm --version)"
 
 if ! command -v pi >/dev/null 2>&1 || [[ "$(pi --version 2>/dev/null || true)" != "$EXPECTED_PI" ]]; then
